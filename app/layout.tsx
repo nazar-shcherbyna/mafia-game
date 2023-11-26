@@ -1,4 +1,5 @@
 import '@/app/ui/global.css';
+import { Analytics } from '@vercel/analytics/react';
 import { inter } from './ui/fonts';
 
 export default function RootLayout({
@@ -11,7 +12,10 @@ export default function RootLayout({
       <head>
         <title>Next.js 14 Starter</title>
       </head>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
