@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Next.js 14 Starter</title>
+        <title>Next.js 14 + Translations</title>
       </head>
       <body className={`${inter.className} antialiased`}>
         {children}

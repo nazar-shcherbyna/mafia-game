@@ -2,6 +2,7 @@
 
 import {
   DocumentDuplicateIcon,
+  DocumentTextIcon,
   HomeIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
@@ -19,6 +20,11 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  {
+    name: 'Translations',
+    href: '/dashboard/translations',
+    icon: DocumentTextIcon,
+  },
 ];
 
 export default function NavLinks() {
