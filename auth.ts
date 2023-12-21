@@ -1,3 +1,5 @@
+'use server';
+
 import type { User } from '@/app/lib/definitions';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
