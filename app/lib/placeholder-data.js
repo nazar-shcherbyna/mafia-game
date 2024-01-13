@@ -180,9 +180,15 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
+const translations = {
+  'translations__link': 'Translations',
+  'translations__page-title': 'Translations settings',
+};
+
 module.exports = {
   users,
   customers,
   invoices,
   revenue,
+  translations
 };
