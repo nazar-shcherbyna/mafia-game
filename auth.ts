@@ -1,20 +1,22 @@
 'use server';
 
-import type { User } from '@/app/lib/definitions';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
+import { PlayerType } from './app/@types/types';
 import { authConfig } from './auth.config';
+import { settings } from './settings';
 
-async function getUser(email: string): Promise<User | undefined> {
+async function getUser(nickname: string): Promise<PlayerType | undefined> {
   try {
-    const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0];
+    const player =
+      await sql<PlayerType>`SELECT nickname, password FROM players WHERE nickname=${nickname}`;
+    return player.rows[0];
   } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    console.error('Failed to fetch player:', error);
+    throw new Error('Failed to fetch player.');
   }
 }
 
@@ -25,14 +27,17 @@ export const { auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
-            email: z.string().email(),
-            password: z.string().min(6),
+            nickname: z
+              .string()
+              .min(settings.nickname.minLength)
+              .max(settings.nickname.maxLength),
+            password: z.string().min(settings.password.minLength),
           })
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
+          const { nickname, password } = parsedCredentials.data;
+          const user = await getUser(nickname);
 
           if (!user) return null;
 

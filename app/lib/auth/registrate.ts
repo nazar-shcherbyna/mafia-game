@@ -1,6 +1,10 @@
 'use server';
 
+import { PlayerType } from '@/app/@types/types';
+import { signIn } from '@/auth';
+import { settings } from '@/settings';
 import { sql } from '@vercel/postgres';
+import bcrypt from 'bcrypt';
 import { AuthError } from 'next-auth';
 import { z } from 'zod';
 
@@ -9,14 +13,14 @@ const RegistrationFormSchema = z.object({
     .string({
       invalid_type_error: 'Please enter a valid nickname.',
     })
-    .min(3)
-    .max(20),
+    .min(settings.nickname.minLength)
+    .max(settings.nickname.maxLength),
   password: z
     .string({
       invalid_type_error: 'Please enter a valid password.',
     })
-    .min(6)
-    .max(10),
+    .min(settings.password.minLength)
+    .max(settings.password.maxLength),
 });
 
 export async function registrate(prevState: any, formData: FormData) {
@@ -33,15 +37,24 @@ export async function registrate(prevState: any, formData: FormData) {
       };
     }
 
+    const isPlayerExists = await checkIfPlayerExists(
+      validatedFields.data.nickname,
+    );
+
+    if (isPlayerExists) {
+      return 'Player with such nickname already exists.';
+    }
+
+    const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
+
     await sql`
         INSERT INTO players (nickname, password) 
-        VALUES (${validatedFields.data.nickname}, ${validatedFields.data.password})
+        VALUES (${validatedFields.data.nickname}, ${hashedPassword})
       `;
-    const player =
-      await sql`SELECT nikname, password FROM players WHERE nickname = ${validatedFields.data.nickname}`;
-    alert(`Player ${player} created!`);
+
+    await signIn('credentials', validatedFields.data);
   } catch (error) {
-    alert(`Failed to create player: ${error}`);
+    console.log(`Failed to create player: ${error}`);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -52,4 +65,10 @@ export async function registrate(prevState: any, formData: FormData) {
     }
     throw error;
   }
+}
+
+async function checkIfPlayerExists(nickname: string) {
+  const player =
+    await sql<PlayerType>`SELECT nickname FROM players WHERE nickname = ${nickname}`;
+  return Boolean(player.rows.length);
 }
