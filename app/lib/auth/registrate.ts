@@ -21,6 +21,12 @@ const RegistrationFormSchema = z.object({
     })
     .min(settings.password.minLength)
     .max(settings.password.maxLength),
+  confirmPassword: z
+    .string({
+      invalid_type_error: 'Please enter a valid password.',
+    })
+    .min(settings.password.minLength)
+    .max(settings.password.maxLength),
 });
 
 export async function registrate(prevState: any, formData: FormData) {
@@ -28,6 +34,7 @@ export async function registrate(prevState: any, formData: FormData) {
     const validatedFields = RegistrationFormSchema.safeParse({
       nickname: formData.get('nickname'),
       password: formData.get('password'),
+      confirmPassword: formData.get('confirmPassword'),
     });
 
     if (!validatedFields.success) {
@@ -35,6 +42,12 @@ export async function registrate(prevState: any, formData: FormData) {
         errors: validatedFields.error.flatten().fieldErrors,
         message: 'Missing Fields. Failed to Create Player.',
       };
+    }
+
+    if (
+      validatedFields.data.password !== validatedFields.data.confirmPassword
+    ) {
+      return 'Passwords do not match.';
     }
 
     const isPlayerExists = await checkIfPlayerExists(

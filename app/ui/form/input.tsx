@@ -1,10 +1,10 @@
+import { KeyIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
 export const UiFormInput: React.FC<{
   name: string;
   label?: string;
   placeholder?: string;
-  icon?: React.ReactNode;
   disabled?: boolean;
   required?: boolean;
   minLength?: number;
@@ -14,7 +14,6 @@ export const UiFormInput: React.FC<{
   name,
   label,
   placeholder,
-  icon,
   required,
   disabled,
   minLength,
@@ -33,10 +32,14 @@ export const UiFormInput: React.FC<{
       )}
       <div className="relative">
         <input
-          className="block w-full 
-            rounded-md border-[1px] border-[#68709B] bg-white p-2 pl-10 
-            text-sm  text-[#425197] placeholder:text-[#D0D4E8]
-            focus:border-[#28C76F]"
+          className="w-full 
+            rounded-md border-[1px] border-[#68709B] bg-white px-3 py-2.5
+            text-sm  text-[#425197] 
+            outline-none
+            ring-0
+            placeholder:text-[#D0D4E8] focus:border-[#28C76F]
+            focus:outline-none active:border-[#28C76F]
+            active:outline-none"
           id={name}
           type={type}
           name={name}
@@ -45,7 +48,9 @@ export const UiFormInput: React.FC<{
           aria-disabled={disabled}
           minLength={minLength}
         />
-        {icon}
+        {type === 'password' && (
+          <KeyIcon className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        )}
       </div>
     </div>
   );

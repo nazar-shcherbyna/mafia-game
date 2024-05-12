@@ -1,7 +1,7 @@
 'use client';
 
 import { State } from '@/app/lib/actions';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/app/ui/atoms/button';
 import {
   CheckIcon,
   ClockIcon,

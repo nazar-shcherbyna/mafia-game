@@ -2,7 +2,7 @@
 
 import { State, updateInvoice } from '@/app/lib/actions';
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
-import { Button } from '@/app/ui/button';
+import { Button } from '@/app/ui/atoms/button';
 import {
   CheckIcon,
   ClockIcon,
