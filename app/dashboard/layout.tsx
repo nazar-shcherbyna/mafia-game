@@ -4,11 +4,11 @@ import SideNav from '../ui/sidenav/sidenav';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className="flex h-screen flex-col">
       <div className="flex w-full justify-center px-6 pb-8 pt-10">
         <MainLogo />
       </div>
-      <div className="flex h-screen flex-col p-6 lg:flex-row lg:overflow-hidden">
+      <div className="p-6 lg:flex-row lg:overflow-hidden">
         <div className="w-full flex-none pb-6 lg:w-1/3">
           <SideNav />
         </div>

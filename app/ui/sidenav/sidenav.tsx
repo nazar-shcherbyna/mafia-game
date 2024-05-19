@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslate } from '@/app/providers/TranslationsProvider/provider';
-import { PlayerCard } from './components/PlayerCard';
-import { PlayerStatistic } from './components/PlayerStatistic';
+import { PlayerCard } from './components/player-card';
+import { PlayerStatistic } from './components/player-statistic';
 
 export default function SideNav() {
   const translate = useTranslate();

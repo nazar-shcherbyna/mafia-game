@@ -3,7 +3,7 @@ export const UiStatus: React.FC<{
 }> = ({ status }) => {
   if (status === 'active') {
     return (
-      <span className="rounded-full bg-[#203C3D] px-5 py-1.5 text-[#28C76F]">
+      <span className="rounded-full bg-[#203C3D] px-5 py-1.5 capitalize text-[#28C76F]">
         {status}
       </span>
     );
@@ -11,7 +11,7 @@ export const UiStatus: React.FC<{
 
   if (status === 'inactive') {
     return (
-      <span className="rounded-full bg-[#3F2A38] px-5 py-1.5 text-[#EA5455]">
+      <span className="rounded-full bg-[#3F2A38] px-5 py-1.5 capitalize text-[#EA5455]">
         {status}
       </span>
     );

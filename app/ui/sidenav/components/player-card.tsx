@@ -1,7 +1,7 @@
 import { CircleStackIcon, GiftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { UiBox } from '../../atoms/box';
-import { SidebarSignOut } from './SignOut';
+import { SidebarSignOut } from './sign-out';
 
 export const PlayerCard: React.FC = () => {
   return (
