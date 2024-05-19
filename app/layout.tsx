@@ -1,7 +1,6 @@
 import '@/app/ui/global.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
-import { TranslationsProvider } from './providers/TranslationsProvider';
 import { inter } from './ui/fonts';
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-[#1F2233] text-[#CFD3EC] antialiased`}
       >
-        <TranslationsProvider>{children}</TranslationsProvider>
+        {children}
         <Analytics />
       </body>
     </html>
