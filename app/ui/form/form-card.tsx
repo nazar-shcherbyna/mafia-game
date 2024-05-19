@@ -9,7 +9,7 @@ export const UiFormCard: React.FC<{
     <div
       className="
         w-[320px] rounded-xl border-[1px]
-        border-[#68709B] bg-[#393C51] p-6 text-white
+        border-[#68709B] bg-[#393C51] p-6
         sm:w-[440px] 
         md:p-10
       "

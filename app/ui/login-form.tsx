@@ -3,7 +3,7 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { useFormState, useFormStatus } from 'react-dom';
 import { login } from '../lib/auth/login';
-import { Button } from './atoms/button';
+import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';
 import { UiFormInputPassword } from './form/input-password';
@@ -53,8 +53,8 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button className="mt-6" aria-disabled={pending}>
+    <UiButton className="mt-6" aria-disabled={pending}>
       Sign in
-    </Button>
+    </UiButton>
   );
 }

@@ -8,8 +8,7 @@ export const UiBox: React.FC<{
         rounded-xl
         border-[1px] border-[#68709B] 
         bg-[#393C51]
-        p-5
-        text-white`}
+        p-5`}
     >
       {children}
     </div>
