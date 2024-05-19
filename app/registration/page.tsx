@@ -1,14 +1,14 @@
-import LoginForm from '@/app/ui/login-form';
 import { Metadata } from 'next';
+import RegistrationForm from '../ui/registration-form';
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Registration',
 };
 
-export default function LoginPage() {
+export default function RegistrationPage() {
   return (
     <div className="flex h-screen items-center justify-center">
-      <LoginForm />
+      <RegistrationForm />
     </div>
   );
 }

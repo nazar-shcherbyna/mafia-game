@@ -3,50 +3,51 @@ const {
   invoices,
   customers,
   revenue,
-  users,
+  defautlPlayers,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
-async function seedUsers(client) {
+async function seedPlayers(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-    // Create the "users" table if it doesn't exist
+    // Create the "players" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS players (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        nickname VARCHAR(20) NOT NULL,
+        password TEXT NOT NULL,
+        join_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        role VARCHAR(20) DEFAULT 'player'
       );
     `;
 
-    console.log(`Created "users" table`);
+    console.log(`Created "Players" table`);
 
-    // Insert data into the "users" table
-    const insertedUsers = await Promise.all(
-      users.map(async (user) => {
-        const hashedPassword = await bcrypt.hash(user.password, 10);
+    // Insert data into the "Players" table
+    const insertedPlayers = await Promise.all(
+      defautlPlayers.map(async (player) => {
+        const hashedPassword = await bcrypt.hash(player.password, 10);
         return client.sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
-      `;
+          INSERT INTO players (id, nickname, join_date, password, role)
+          VALUES (${player.id}, ${player.nickname}, CURRENT_TIMESTAMP, ${hashedPassword}, 'admin')
+          ON CONFLICT (id) DO NOTHING;
+        `;
       }),
     );
 
-    console.log(`Seeded ${insertedUsers.length} users`);
+    console.log(`Seeded ${insertedPlayers.length} Players`);
 
     return {
       createTable,
-      users: insertedUsers,
+      players: insertedPlayers,
     };
   } catch (error) {
-    console.error('Error seeding users:', error);
+    console.error('Error seeding Players:', error);
     throw error;
   }
 }
 
-async function seedInvoices(client) {
+async function seedGames(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
@@ -163,9 +164,8 @@ async function seedRevenue(client) {
 async function main() {
   const client = await db.connect();
 
-  await seedUsers(client);
+  await seedPlayers(client);
   await seedCustomers(client);
-  await seedInvoices(client);
   await seedRevenue(client);
 
   await client.end();

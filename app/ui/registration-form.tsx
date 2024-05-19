@@ -2,18 +2,18 @@
 
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { useFormState, useFormStatus } from 'react-dom';
-import { login } from '../lib/auth/login';
+import { registrate } from '../lib/auth/registrate';
 import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';
 import { UiFormInputPassword } from './form/input-password';
 import { UiLink } from './link';
 
-export default function LoginForm() {
-  const [errorMessage, dispatch] = useFormState(login, undefined);
+export default function RegistrationForm() {
+  const [errorMessage, dispatch] = useFormState(registrate, undefined);
 
   return (
-    <UiFormCard action={dispatch} label="Please login">
+    <UiFormCard action={dispatch} label="Please register">
       <UiFormInput
         name="nickname"
         label="Nickname"
@@ -24,10 +24,15 @@ export default function LoginForm() {
       <UiFormInputPassword
         name="password"
         label="Password"
-        placeholder="Enter your nickname"
+        placeholder="Enter your password"
+        className="mb-3"
       />
-      <LoginButton />
-
+      <UiFormInputPassword
+        name="confirmPassword"
+        label="Confirm password"
+        placeholder="Enter your password"
+      />
+      <RegisterButton />
       {errorMessage && (
         <div
           className="flex h-8 items-end space-x-1"
@@ -35,26 +40,26 @@ export default function LoginForm() {
           aria-atomic="true"
         >
           <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-          <p className="text-sm text-red-500">{errorMessage}</p>
+          {/* TODO fix toString */}
+          <p className="text-sm text-red-500">{errorMessage.toString()}</p>
         </div>
       )}
-
       <div className="mt-6">
         Or, please:
-        <UiLink href="/registration" className="ml-2">
-          Sign up
+        <UiLink href="/login" className="ml-2">
+          Login
         </UiLink>
       </div>
     </UiFormCard>
   );
 }
 
-function LoginButton() {
+function RegisterButton() {
   const { pending } = useFormStatus();
 
   return (
     <UiButton className="mt-6" aria-disabled={pending}>
-      Sign in
+      Register
     </UiButton>
   );
 }
