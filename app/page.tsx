@@ -10,14 +10,13 @@ export default function Page() {
             src="/main-logo.png"
             width={560}
             height={620}
-            // className="block md:hidden"
             alt="Screenshots of the dashboard project showing mobile version"
           />
           <div className="flex gap-8">
             <UiLink href="/login" className="px-5 py-3">
               Sign in
             </UiLink>
-            <UiLink href="/register" className="px-5 py-3">
+            <UiLink href="/registration" className="px-5 py-3">
               Sign up
             </UiLink>
           </div>
