@@ -40,7 +40,8 @@ export default function RegistrationForm() {
           aria-atomic="true"
         >
           <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-          <p className="text-sm text-red-500">{errorMessage}</p>
+          {/* TODO fix toString */}
+          <p className="text-sm text-red-500">{errorMessage.toString()}</p>
         </div>
       )}
       <div className="mt-6">

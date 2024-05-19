@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <main className="flex min-h-screen p-6">
+    <div className="flex min-h-screen p-6">
       <div className="flex grow flex-col items-center justify-center gap-4">
         <div className="flex flex-col items-center justify-center p-6">
           {/* <Image
@@ -44,6 +44,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
