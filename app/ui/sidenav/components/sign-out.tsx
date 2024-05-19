@@ -10,16 +10,18 @@ export const SidebarSignOut: React.FC = () => {
       }}
     >
       <UiButton
-        className="flex items-center rounded-md
-        border-[1px] border-[#68709B] 
-        bg-[#E3E1FC]
-        px-5
-        py-2
-        text-[#746BD4] hover:text-white focus:text-white active:text-white"
+        className="flex items-center rounded-md border-[1px] border-[#746BD4]
+        bg-[#E3E1FC] px-5 py-2 text-sm font-medium
+        !text-[#746BD4] hover:text-white focus:text-white active:text-white"
         type="submit"
       >
-        <ArrowRightOnRectangleIcon width={16} height={16} className="mr-2" />
-        <span className="inline-block">Sign Out</span>
+        <ArrowRightOnRectangleIcon
+          color="#746BD4"
+          width={16}
+          height={16}
+          className="mr-2"
+        />
+        Sign Out
       </UiButton>
     </form>
   );
