@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps) {
           <div className="flex w-full justify-center px-6 pb-8 pt-10">
             <MainLogo />
           </div>
-          {children}
+          <div className="mt-10">{children}</div>
         </main>
         <Analytics />
       </body>

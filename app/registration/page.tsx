@@ -6,5 +6,9 @@ export const metadata: Metadata = {
 };
 
 export default function RegistrationPage() {
-  return <RegistrationForm />;
+  return (
+    <div className="flex justify-center">
+      <RegistrationForm />
+    </div>
+  );
 }
