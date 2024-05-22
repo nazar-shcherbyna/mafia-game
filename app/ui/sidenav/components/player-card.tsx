@@ -23,12 +23,17 @@ export const PlayerCard: React.FC = () => {
               color="#746BD4"
               width={24}
               height={24}
-              className="mr-1"
+              className="mr-1 shrink-0"
             />
             Balance — 1000
           </div>
           <div className="flex items-center text-[14px] leading-[21px]">
-            <GiftIcon color="#746BD4" width={24} height={24} className="mr-1" />
+            <GiftIcon
+              color="#746BD4"
+              width={24}
+              height={24}
+              className="mr-1 shrink-0"
+            />
             Free games — 3
           </div>
         </div>

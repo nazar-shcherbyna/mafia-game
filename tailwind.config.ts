@@ -17,6 +17,10 @@ const config: Config = {
           500: '#0070F3',
           600: '#2F6FEB',
         },
+        white: {
+          400: '#D9D9D9',
+          500: '#c0bebe',
+        }
       },
     },
     keyframes: {
