@@ -19,7 +19,7 @@ export const SidebarSignOut: React.FC = () => {
           color="#746BD4"
           width={16}
           height={16}
-          className="mr-2"
+          className="mr-2 shrink-0"
         />
         Sign Out
       </UiButton>

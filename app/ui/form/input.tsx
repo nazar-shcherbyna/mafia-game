@@ -10,6 +10,8 @@ export const UiFormInput: React.FC<{
   minLength?: number;
   type: React.HTMLInputTypeAttribute;
   className?: string;
+  step?: string | number;
+  min?: string | number;
 }> = ({
   name,
   label,
@@ -19,6 +21,8 @@ export const UiFormInput: React.FC<{
   minLength,
   type,
   className,
+  step,
+  min,
 }) => {
   return (
     <div className={className}>
@@ -47,6 +51,8 @@ export const UiFormInput: React.FC<{
           required={required}
           aria-disabled={disabled}
           minLength={minLength}
+          step={step}
+          min={min}
         />
         {type === 'password' && (
           <KeyIcon className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
