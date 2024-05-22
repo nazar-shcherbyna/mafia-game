@@ -4,13 +4,14 @@ export const UiFormCard: React.FC<{
   label?: string;
   children: NonNullable<React.ReactNode>;
   action: (formData: FormData) => void;
-}> = ({ label, children, action }) => {
+  className?: string;
+}> = ({ label, children, action, className }) => {
   return (
     <div
-      className="
-        w-[320px] rounded-xl border-[1px]
-        border-[#68709B] bg-[#393C51] p-6
-        sm:w-[440px] 
+      className="${className} w-[320px] rounded-xl
+        border-[1px] border-[#68709B] bg-[#393C51]
+        p-6 
+        sm:w-[440px]
         md:p-10
       "
     >

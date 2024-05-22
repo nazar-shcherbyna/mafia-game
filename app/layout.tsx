@@ -2,6 +2,7 @@ import type { LayoutProps } from '@/.next/types/app/layout';
 import '@/app/ui/global.css';
 import { Analytics } from '@vercel/analytics/react';
 import { Metadata } from 'next';
+import { MainLogo } from './ui/atoms/main-logo';
 import { inter } from './ui/fonts';
 
 export const metadata: Metadata = {
@@ -20,7 +21,12 @@ export default function RootLayout({ children }: LayoutProps) {
       <body
         className={`${inter.className} bg-[#1F2233] text-[#CFD3EC] antialiased`}
       >
-        <main>{children}</main>
+        <main className="h-screen">
+          <div className="flex w-full justify-center px-6 pb-8 pt-10">
+            <MainLogo />
+          </div>
+          {children}
+        </main>
         <Analytics />
       </body>
     </html>

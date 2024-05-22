@@ -3,7 +3,7 @@ import { UiLink } from './ui/link';
 
 export default function Page() {
   return (
-    <div className="flex min-h-screen p-6">
+    <div className="flex p-6">
       <div className="flex grow flex-col items-center justify-center gap-4">
         <div className="flex flex-col items-center justify-center gap-6 p-6">
           <Image
