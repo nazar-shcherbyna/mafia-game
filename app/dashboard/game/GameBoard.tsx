@@ -30,8 +30,8 @@ export const GameBoard = ({
   const { isDisabledDayRound, isDisabledNightRound } = useDisableNextRound();
 
   return (
-    <div className="relative flex w-full flex-col items-center pt-[5vw]">
-      <div className="relative top-[-5vw] flex w-full flex-row items-center justify-between px-[10vw]">
+    <div className="relative flex w-full grow-0 flex-col items-center py-20">
+      <div className="absolute top-3 flex w-full items-center justify-between">
         <UiButton
           onClick={previousRoundHandler}
           aria-disabled={!round && !isNight}
@@ -57,7 +57,7 @@ export const GameBoard = ({
 
       <Board />
 
-      <div className="relative bottom-[-1vw] mb-2 flex w-full flex-row items-center justify-between px-[10vw]">
+      <div className="absolute bottom-3 flex w-full items-center justify-between">
         <UiButton onClick={restartHandler}>Restart</UiButton>
       </div>
     </div>

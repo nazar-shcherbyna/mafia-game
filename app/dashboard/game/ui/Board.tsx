@@ -11,42 +11,33 @@ export const Board = () => {
   const roundReport = useGameStore((state) => state.roundReport);
 
   return (
-    <div className="relative mb-[7vw] h-[calc(80vw/2)] w-[80vw] rounded-[7vw] border-[20px] border-white-400">
-      <div className="absolute left-1/2 top-1/2 h-[calc(80vw/3)] w-max translate-x-[-50%] translate-y-[-50%] overflow-y-auto pr-2">
+    <div className="relative h-[150px] w-[300px] rounded-[60px] border-[20px] border-white-400 sm:h-[250px] sm:w-[500px] md:h-[370px] md:w-[640px] lg:h-[450px] lg:w-[900px]">
+      <div className="absolute left-1/2 top-1/2 h-2/3 w-max translate-x-[-50%] translate-y-[-50%] overflow-y-auto">
         {selectedSit && <SitEditor />}
-        {!!roundReport.length && <RoundReport />}
+        {!selectedSit && !!roundReport.length && <RoundReport />}
       </div>
-      {/* [-11px] - border-[20px] / 2 + h-[2px]/2 = 11px */}
       <PlayersRow>
-        {Array(5)
-          .fill(null)
-          .map((item, index) => (
-            <PlayerDotWrapper key={index} index={1 + index}></PlayerDotWrapper>
-          ))}
+        {Array.from({ length: 5 }, (_, index) => (
+          <PlayerDotWrapper key={index} index={1 + index}></PlayerDotWrapper>
+        ))}
       </PlayersRow>
 
       <PlayersColumn right>
-        {Array(3)
-          .fill(null)
-          .map((item, index) => (
-            <PlayerDotWrapper key={index} index={6 + index}></PlayerDotWrapper>
-          ))}
+        {Array.from({ length: 3 }, (_, index) => (
+          <PlayerDotWrapper key={index} index={6 + index}></PlayerDotWrapper>
+        ))}
       </PlayersColumn>
 
       <PlayersRow bottom>
-        {Array(5)
-          .fill(null)
-          .map((item, index) => (
-            <PlayerDotWrapper key={index} index={9 + index}></PlayerDotWrapper>
-          ))}
+        {Array.from({ length: 5 }, (_, index) => (
+          <PlayerDotWrapper key={index} index={9 + index}></PlayerDotWrapper>
+        ))}
       </PlayersRow>
 
       <PlayersColumn>
-        {Array(3)
-          .fill(null)
-          .map((item, index) => (
-            <PlayerDotWrapper key={index} index={14 + index}></PlayerDotWrapper>
-          ))}
+        {Array.from({ length: 3 }, (_, index) => (
+          <PlayerDotWrapper key={index} index={14 + index}></PlayerDotWrapper>
+        ))}
       </PlayersColumn>
     </div>
   );
@@ -130,10 +121,10 @@ const PlayerDot = ({
 }) => (
   <button
     onClick={onClick}
-    className={`h-[7vw] w-[7vw] ${bgColor} ${opacity} rounded-full text-blue-400 hover:bg-white-500 ${
+    className={`h-[50px] w-[50px] sm:h-[60px] sm:w-[60px] md:h-[70px] md:w-[70px] lg:h-[80px] lg:w-[80px] ${bgColor} ${opacity} rounded-full text-xs text-blue-400 hover:bg-white-500 sm:text-sm ${
       selected ? 'border-[2px] border-blue-400' : ''
     }`}
   >
-    {index} - {role || 'EMPTY'}
+    {index}. {role || 'EMPTY'}
   </button>
 );

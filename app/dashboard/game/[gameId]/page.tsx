@@ -6,14 +6,14 @@ export const metadata: Metadata = {
   title: 'Game',
 };
 
-export default async function GamePage({ params }: { params: { gameId: string } }) {
+export default async function GamePage({
+  params,
+}: {
+  params: { gameId: string };
+}) {
   const gameId = params.gameId;
 
-  const registeredPlayers = await getRegisteredGamePlayers(gameId)
+  const registeredPlayers = await getRegisteredGamePlayers(gameId);
 
-  return (
-    <div className="flex items-center justify-center">
-      <GameBoard gameId={gameId} registeredPlayers={registeredPlayers} />
-    </div>
-  );
+  return <GameBoard gameId={gameId} registeredPlayers={registeredPlayers} />;
 }
