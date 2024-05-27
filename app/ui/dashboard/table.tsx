@@ -1,5 +1,5 @@
-import { UiButton } from '../atoms/button';
 import { UiStatus } from '../atoms/status';
+import { UiLink } from '../link';
 
 export const GamesTable: React.FC<{
   columns: string[];
@@ -46,9 +46,12 @@ export const GamesTable: React.FC<{
             </td>
             <td className="px-6 py-3.5">9/12</td>
             <td className="px-6 py-3.5">
-              <UiButton className="rounded-md px-5 py-1.5 text-xs font-medium">
+              <UiLink
+                className="rounded-md px-5 py-1.5 text-xs font-medium"
+                href="/dashboard/game/game-id"
+              >
                 View
-              </UiButton>
+              </UiLink>
             </td>
           </tr>
           <tr>
@@ -59,9 +62,12 @@ export const GamesTable: React.FC<{
             </td>
             <td className="px-6 py-3.5">9/12</td>
             <td className="px-6 py-3.5">
-              <UiButton className="rounded-md px-5 py-1.5 text-xs font-medium">
+              <UiLink
+                className="rounded-md px-5 py-1.5 text-xs font-medium"
+                href="/dashboard/game/game-id"
+              >
                 View
-              </UiButton>
+              </UiLink>
             </td>
           </tr>
         </tbody>
