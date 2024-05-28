@@ -12,6 +12,7 @@ export const UiFormInput: React.FC<{
   className?: string;
   step?: string | number;
   min?: string | number;
+  errorMessages?: string[];
 }> = ({
   name,
   label,
@@ -23,6 +24,7 @@ export const UiFormInput: React.FC<{
   className,
   step,
   min,
+  errorMessages,
 }) => {
   return (
     <div className={className}>
@@ -36,8 +38,8 @@ export const UiFormInput: React.FC<{
       )}
       <div className="relative">
         <input
-          className="w-full 
-            rounded-md border-[1px] border-[#68709B] bg-white px-3 py-2.5
+          className="bg-white 
+            w-full rounded-md border-[1px] border-[#68709B] px-3 py-2.5
             text-sm  text-[#425197] 
             outline-none
             ring-0
@@ -58,6 +60,11 @@ export const UiFormInput: React.FC<{
           <KeyIcon className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
         )}
       </div>
+      {errorMessages?.map((message) => (
+        <p className="py-1 text-sm text-red-500" key={message}>
+          {message}
+        </p>
+      ))}
     </div>
   );
 };

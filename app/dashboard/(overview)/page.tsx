@@ -1,4 +1,4 @@
-import { GamesTableAlert } from '@/app/ui/dashboard/alert';
+import { EventsTableAlert } from '@/app/ui/dashboard/alert';
 import { GamesTable } from '@/app/ui/dashboard/table';
 import SideNav from '@/app/ui/sidenav/sidenav';
 import { Metadata } from 'next';
@@ -15,7 +15,7 @@ export default async function Page() {
       </div>
       <div className="flex-grow pl-0 lg:w-2/3 lg:overflow-y-auto lg:pl-6">
         <div className="flex flex-col gap-6">
-          <GamesTableAlert />
+          <EventsTableAlert />
           <GamesTable className="" columns={[]} data={[]} />
         </div>
       </div>

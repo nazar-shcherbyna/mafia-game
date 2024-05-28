@@ -50,7 +50,7 @@ export async function registrate(prevState: any, formData: FormData) {
       return 'Passwords do not match.';
     }
 
-    const isPlayerExists = await checkIfPlayerExists(
+    const isPlayerExists = await checkIfPlayerNicknameAlreadyExist(
       validatedFields.data.nickname,
     );
 
@@ -80,7 +80,7 @@ export async function registrate(prevState: any, formData: FormData) {
   }
 }
 
-async function checkIfPlayerExists(nickname: string) {
+async function checkIfPlayerNicknameAlreadyExist(nickname: string) {
   const player =
     await sql<PlayerType>`SELECT nickname FROM players WHERE nickname = ${nickname}`;
   return Boolean(player.rows.length);
