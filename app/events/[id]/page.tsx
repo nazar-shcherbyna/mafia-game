@@ -1,6 +1,6 @@
 import { UiBox } from '@/app/ui/atoms/box';
 import type { Metadata } from 'next';
-import { fetchEvent } from '../lib/create';
+import { fetchEvent } from '../../lib/events/create';
 
 export const metadata: Metadata = {
   title: 'Game Number',
