@@ -7,4 +7,12 @@ export const settings = {
     minLength: 5,
     maxLength: 10,
   },
+  eventTitle: {
+    minLength: 3,
+    maxLength: 40,
+  },
+  eventLocation: {
+    minLength: 3,
+    maxLength: 20,
+  },
 };

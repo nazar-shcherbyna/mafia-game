@@ -3,16 +3,17 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useFormState, useFormStatus } from 'react-dom';
-import { registrate } from '../lib/auth/registrate';
+import { createEvent } from '../events/lib/create';
 import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';
 
-export default function CreateGameForm() {
-  const [errorMessage, dispatch] = useFormState(registrate, undefined);
+export default function CreateEventForm() {
+  const [formState, dispatch] = useFormState(createEvent, undefined);
+  console.log(formState);
 
   return (
-    <UiFormCard action={dispatch} label="Create new game">
+    <UiFormCard action={dispatch} label="New event">
       <Image
         width={200}
         height={200}
@@ -21,11 +22,12 @@ export default function CreateGameForm() {
         className="mx-auto mb-2"
       />
       <UiFormInput
-        name="name"
-        label="Game name"
+        name="title"
+        label="Event title"
         placeholder="Please enter"
         type="text"
         className="mb-3"
+        errorMessages={formState?.errors.title}
       />
       <UiFormInput
         name="date"
@@ -34,24 +36,25 @@ export default function CreateGameForm() {
         className="mb-3"
         type="datetime-local"
         step={60}
-        min={new Date().toISOString()}
+        min={new Date().toDateString()}
+        errorMessages={formState?.errors.date}
       />
       <UiFormInput
-        name="city"
-        label="City"
+        name="location"
+        label="Location"
         placeholder="Please select"
         type="text"
+        errorMessages={formState?.errors.location}
       />
       <CreateButton />
-      {errorMessage && (
+      {formState?.message && (
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
           aria-atomic="true"
         >
           <ExclamationCircleIcon className="h-5 w-5 shrink-0 text-red-500" />
-          {/* TODO fix toString */}
-          <p className="text-sm text-red-500">{errorMessage.toString()}</p>
+          <p className="text-sm text-red-500">{formState.message}</p>
         </div>
       )}
     </UiFormCard>
