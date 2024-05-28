@@ -1,5 +1,5 @@
 import { useGameStore } from '@/app/store';
-import { getActionsCount, getNotUsedNightActions } from '../utils';
+import { getActionsObjCount, getNotUsedNightActions } from '../utils';
 import { useGetCurrentDayOrNightStore } from './hooks';
 
 export const useDisableNextRound = (): {
@@ -15,10 +15,10 @@ export const useDisableNextRound = (): {
   const notUsedNightActions = getNotUsedNightActions(gamePlayers);
   const isDisabledNightRound = Object.keys(notUsedNightActions).length > 0;
 
-  console.log(getActionsCount(playersStore[round]));
-
+  const actionsObjCount = getActionsObjCount(playersStore[round]);
+  console.log(actionsObjCount);
   const isDisabledDayRound =
-    round !== 0 && !getActionsCount(playersStore[round]).KILLED_BY_DAY_VOTE;
+    round !== 0 && !actionsObjCount?.KILLED_BY_DAY_VOTE;
 
   return {
     isDisabledDayRound: isNight ? false : isDisabledDayRound,

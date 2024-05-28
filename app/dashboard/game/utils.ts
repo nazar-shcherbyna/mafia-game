@@ -15,8 +15,11 @@ export const findGamePlayerBySitPlace = (
   return { playerId, player };
 };
 
-export const getAliveRolesCount = (gamePlayers: PlayerGameDictType) => {
-  if (!gamePlayers) return {};
+export const getAliveRolesObjCount = (
+  gamePlayers: PlayerGameDictType,
+): Record<GamePlayerRolesKeysType, number> | null => {
+  if (!gamePlayers) return null;
+
   return Object.values(gamePlayers)
     .filter((player) => !GAME_PLAYER_STATUS[player.status].isDeadly)
     .map((player) => player.role)
@@ -30,8 +33,11 @@ export const getAliveRolesCount = (gamePlayers: PlayerGameDictType) => {
     );
 };
 
-export const getActionsCount = (players: PlayerGameDictType) => {
-  if (!players) return {};
+export const getActionsObjCount = (
+  players: PlayerGameDictType,
+): Record<GamePlayerStatusKeysType, number> | null => {
+  if (!players) return null;
+
   const allActionsByGameRound = Object.values(players).map(
     (player) => player.actions,
   );
@@ -47,8 +53,9 @@ export const getActionsCount = (players: PlayerGameDictType) => {
 };
 
 export const checkWinner = (gamePlayers: PlayerGameDictType) => {
-  const rolesDict = getAliveRolesCount(gamePlayers);
-  if (!Object.values(rolesDict).length) return;
+  const rolesDict = getAliveRolesObjCount(gamePlayers);
+  if (rolesDict === null || !Object.values(rolesDict).length) return;
+
   const alive = Object.values(rolesDict).reduce((acc, item) => {
     acc += item;
     return acc;
@@ -72,8 +79,8 @@ export const checkWinner = (gamePlayers: PlayerGameDictType) => {
 };
 
 export const getNotUsedNightActions = (gamePlayers: PlayerGameDictType) => {
-  const currentRolesCount = getAliveRolesCount(gamePlayers);
-  const currentActionsCount = getActionsCount(gamePlayers || []);
+  const currentRolesObjCount = getAliveRolesObjCount(gamePlayers);
+  const currentActionsObjCount = getActionsObjCount(gamePlayers || []);
   const nightActions = Object.entries(GAME_PLAYER_STATUS).filter(
     ([_, actionProperties]) => actionProperties.isNightAction,
   );
@@ -81,7 +88,8 @@ export const getNotUsedNightActions = (gamePlayers: PlayerGameDictType) => {
   const nightActionsWithAliveOwners = nightActions.filter(
     ([_, actionProperties]) => {
       const aliveActionOwners = actionProperties.owners.filter(
-        (owner) => currentRolesCount[owner] > 0,
+        (owner) =>
+          currentRolesObjCount !== null && currentRolesObjCount[owner] > 0,
       );
 
       return aliveActionOwners.length > 0;
@@ -91,7 +99,8 @@ export const getNotUsedNightActions = (gamePlayers: PlayerGameDictType) => {
   const remainingNightActions = nightActionsWithAliveOwners.filter(
     ([actionName]) => {
       const isNightActionOnTheTabe =
-        !!currentActionsCount[actionName as GamePlayerStatusKeysType];
+        currentActionsObjCount !== null &&
+        !!currentActionsObjCount[actionName as GamePlayerStatusKeysType];
       return !isNightActionOnTheTabe;
     },
   );

@@ -6,8 +6,8 @@ import {
 } from '@/app/dashboard/game/types';
 import {
   findGamePlayerBySitPlace,
-  getActionsCount,
-  getAliveRolesCount,
+  getActionsObjCount,
+  getAliveRolesObjCount,
 } from '@/app/dashboard/game/utils';
 import { useGameStore } from '@/app/store';
 import { UiButton } from '@/app/ui/atoms/button';
@@ -44,8 +44,8 @@ export const SitEditor = () => {
     day === 0,
   );
 
-  const currentRolesCount = getAliveRolesCount(gamePlayers);
-  const currentActionsCount = getActionsCount(gamePlayers || []);
+  const currentRolesObjCount = getAliveRolesObjCount(gamePlayers);
+  const currentActionsObjCount = getActionsObjCount(gamePlayers || []);
 
   const saveHandler = () => {
     const playersStore_ = [...playersStore];
@@ -126,7 +126,9 @@ export const SitEditor = () => {
                   disabled={
                     !!!(
                       properties.max >
-                      (currentRolesCount[role as GamePlayerRolesKeysType] || 0)
+                      (currentRolesObjCount
+                        ? currentRolesObjCount[role as GamePlayerRolesKeysType]
+                        : 0)
                     )
                   }
                   key={role}
@@ -191,12 +193,15 @@ export const SitEditor = () => {
                       disabled={
                         !!!(
                           properties.maxQuantity >
-                          (currentActionsCount[
-                            status as GamePlayerStatusKeysType
-                          ] || 0)
+                          (currentActionsObjCount
+                            ? currentActionsObjCount[
+                                status as GamePlayerStatusKeysType
+                              ]
+                            : 0)
                         ) ||
                         !!!properties.owners.filter(
-                          (owner) => currentRolesCount[owner],
+                          (owner) =>
+                            currentRolesObjCount && currentRolesObjCount[owner],
                         ).length ||
                         !(
                           properties.isNightAction === isNight ||
