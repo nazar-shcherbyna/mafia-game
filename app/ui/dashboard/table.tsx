@@ -1,9 +1,10 @@
+import { EventType } from '@/app/events/types';
 import { UiStatus } from '../atoms/status';
 import { UiLink } from '../link';
 
 export const GamesTable: React.FC<{
   columns: string[];
-  data: string[][];
+  data: EventType[];
   className?: string;
 }> = ({ columns, data, className }) => {
   return (
@@ -31,45 +32,31 @@ export const GamesTable: React.FC<{
         <thead>
           <tr className="uppercase">
             <th className="min-w-[150px] px-6 py-3.5 text-start">Game name</th>
-            <th className="min-w-[100px] px-6 py-3.5 text-start">Type</th>
+            <th className="min-w-[100px] px-6 py-3.5 text-start">Location</th>
             <th className="px-6 py-3.5 text-start">Status</th>
             <th className="px-6 py-3.5 text-start">Players</th>
             <th className="px-6 py-3.5 text-start">Actions</th>
           </tr>
         </thead>
         <tbody className="bg-[#1F2233]">
-          <tr className="border-b-[1px] border-[#68709B]">
-            <td className="px-6 py-3.5">Name 1</td>
-            <td className="px-6 py-3.5 capitalize">classic</td>
-            <td className="px-6 py-3.5">
-              <UiStatus status="active" />
-            </td>
-            <td className="px-6 py-3.5">9/12</td>
-            <td className="px-6 py-3.5">
-              <UiLink
-                className="rounded-md px-5 py-1.5 text-xs font-medium"
-                href="/dashboard/game/game-id"
-              >
-                View
-              </UiLink>
-            </td>
-          </tr>
-          <tr>
-            <td className="px-6 py-3.5">Name 2</td>
-            <td className="px-6 py-3.5 capitalize">classic</td>
-            <td className="px-6 py-3.5">
-              <UiStatus status="inactive" />
-            </td>
-            <td className="px-6 py-3.5">9/12</td>
-            <td className="px-6 py-3.5">
-              <UiLink
-                className="rounded-md px-5 py-1.5 text-xs font-medium"
-                href="/dashboard/game/game-id"
-              >
-                View
-              </UiLink>
-            </td>
-          </tr>
+          {data.map((event) => (
+            <tr className="border-b-[1px] border-[#68709B]" key={event.id}>
+              <td className="px-6 py-3.5">{event.title}</td>
+              <td className="px-6 py-3.5 capitalize">{event.location}</td>
+              <td className="px-6 py-3.5">
+                <UiStatus status={event.status} />
+              </td>
+              <td className="px-6 py-3.5">9/12</td>
+              <td className="px-6 py-3.5">
+                <UiLink
+                  className="rounded-md px-5 py-1.5 text-xs font-medium"
+                  href={`/events/${event.id}`}
+                >
+                  View
+                </UiLink>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
