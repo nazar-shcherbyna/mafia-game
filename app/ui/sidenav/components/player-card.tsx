@@ -18,7 +18,9 @@ export const PlayerCard: React.FC<{ user: UserType | null }> = ({ user }) => {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <div className="text-[22px] leading-8">{user?.nickname}</div>
+          <div className="text-[22px] leading-8">
+            {user?.nickname} - {JSON.stringify(user)}
+          </div>
           <div className="flex items-center text-[14px] leading-[21px]">
             <CircleStackIcon
               color="#746BD4"

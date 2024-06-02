@@ -56,3 +56,27 @@ export async function fetchAllEvents() {
     throw new Error('Failed to fetch events.');
   }
 }
+
+export async function fetchCountOfPlayerIdInEvent(
+  eventId: string,
+  playerId: string,
+) {
+  unstable_noStore();
+
+  try {
+    const countOfPlayerIdInEvent = await sql<{
+      count: number;
+    }>`
+        SELECT COUNT(player_id) FROM events_players
+        WHERE event_id = ${eventId} AND player_id = ${playerId}
+        LIMIT 1;
+    `;
+
+    return countOfPlayerIdInEvent.rows[0]
+      ? countOfPlayerIdInEvent.rows[0].count
+      : null;
+  } catch (error) {
+    console.error('Database Error:', error);
+    return null;
+  }
+}
