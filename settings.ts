@@ -15,4 +15,5 @@ export const settings = {
     minLength: 3,
     maxLength: 20,
   },
+  eventMaxPlayersCount: 16,
 };

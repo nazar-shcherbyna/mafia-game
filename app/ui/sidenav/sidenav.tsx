@@ -3,8 +3,6 @@ import { PlayerCard } from './components/player-card';
 import { PlayerStatistic } from './components/player-statistic';
 
 export default async function SideNav({ user }: { user: UserType | null }) {
-  console.log('user', user);
-
   return (
     <div className="flex flex-col gap-6">
       <PlayerCard user={user} />

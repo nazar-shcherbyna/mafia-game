@@ -13,3 +13,7 @@ export type EventPlayersType = {
   event_id: string;
   player_id: string;
 };
+
+export interface JoinEventFormStateType {
+  message: string;
+}
