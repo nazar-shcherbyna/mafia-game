@@ -11,14 +11,27 @@ export const authConfig = {
       const isOnEvents = nextUrl.pathname.startsWith('/events');
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        return false;
       } else if (isOnEvents) {
         if (isLoggedIn) return true;
-        return Response.redirect(new URL('/game/create', nextUrl));
+        return false;
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        if (isOnDashboard) {
+          return Response.redirect(new URL('/dashboard', nextUrl));
+        }
+        if (isOnEvents) {
+          return Response.redirect(new URL('/events', nextUrl));
+        }
+
+        return Response.redirect(new URL(nextUrl));
       }
       return true;
+    },
+    session({ session, token }) {
+      if (token && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
     },
   },
   providers: [], // Add providers with an empty array for now

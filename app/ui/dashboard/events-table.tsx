@@ -1,12 +1,18 @@
-import { EventType } from '@/app/events/types';
+import { fetchAllEvents } from '@/app/lib/events/fetch';
 import { UiStatus } from '../atoms/status';
 import { UiLink } from '../link';
 
-export const GamesTable: React.FC<{
-  columns: string[];
-  data: EventType[];
-  className?: string;
-}> = ({ columns, data, className }) => {
+export default async function EventsTable() {
+  const events = await fetchAllEvents();
+
+  if (events.length === 0) {
+    return (
+      <div className="text-center text-[#CFD3EC]">
+        No events found. <br /> Create a new event.
+      </div>
+    );
+  }
+
   return (
     <div
       className="
@@ -21,7 +27,6 @@ export const GamesTable: React.FC<{
     >
       <table
         className={`
-        ${className}
         w-full
         border-collapse
         divide-y-[1px]
@@ -39,8 +44,11 @@ export const GamesTable: React.FC<{
           </tr>
         </thead>
         <tbody className="bg-[#1F2233]">
-          {data.map((event) => (
-            <tr className="border-b-[1px] border-[#68709B]" key={event.id}>
+          {events.map((event) => (
+            <tr
+              className="border-b-[1px] border-[#68709B] last:border-b-0"
+              key={event.id}
+            >
               <td className="px-6 py-3.5">{event.title}</td>
               <td className="px-6 py-3.5 capitalize">{event.location}</td>
               <td className="px-6 py-3.5">
@@ -61,4 +69,4 @@ export const GamesTable: React.FC<{
       </table>
     </div>
   );
-};
+}

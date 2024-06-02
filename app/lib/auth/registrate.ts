@@ -29,7 +29,16 @@ const RegistrationFormSchema = z.object({
     .max(settings.password.maxLength),
 });
 
-export async function registrate(prevState: any, formData: FormData) {
+export async function registrate(
+  prevState: any,
+  formData: FormData,
+): Promise<
+  | {
+      errors: Record<string, string[]> | null;
+      message: string;
+    }
+  | undefined
+> {
   try {
     const validatedFields = RegistrationFormSchema.safeParse({
       nickname: formData.get('nickname'),
@@ -47,7 +56,10 @@ export async function registrate(prevState: any, formData: FormData) {
     if (
       validatedFields.data.password !== validatedFields.data.confirmPassword
     ) {
-      return 'Passwords do not match.';
+      return {
+        errors: null,
+        message: 'Passwords do not match.',
+      };
     }
 
     const isPlayerExists = await checkIfPlayerNicknameAlreadyExist(
@@ -55,7 +67,10 @@ export async function registrate(prevState: any, formData: FormData) {
     );
 
     if (isPlayerExists) {
-      return 'Player with such nickname already exists.';
+      return {
+        errors: null,
+        message: 'Player with this nickname already exists.',
+      };
     }
 
     const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
@@ -71,9 +86,15 @@ export async function registrate(prevState: any, formData: FormData) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
-          return 'Invalid credentials.';
+          return {
+            errors: null,
+            message: 'Invalid credentials.',
+          };
         default:
-          return 'Something went wrong.';
+          return {
+            errors: null,
+            message: 'Failed to sign in.',
+          };
       }
     }
     throw error;

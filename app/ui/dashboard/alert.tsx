@@ -1,8 +1,23 @@
+import { UserType } from '@/app/@types/users';
 import { BellAlertIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import { UiBox } from '../atoms/box';
 import { UiLink } from '../link';
 
-export const EventsTableAlert: React.FC = () => {
+export const EventsTableAlert: React.FC<{
+  user: UserType | null;
+}> = ({ user }) => {
+  if (user?.role === 'admin') {
+    return <EventsTableAlertAdmin />;
+  }
+
+  if (user?.role === 'player') {
+    return <EventsTableAlertPlayer />;
+  }
+
+  return null;
+};
+
+function EventsTableAlertAdmin() {
   return (
     <UiBox className="flex justify-between">
       <div className="flex items-center pr-1 text-sm font-semibold">
@@ -25,4 +40,20 @@ export const EventsTableAlert: React.FC = () => {
       </div>
     </UiBox>
   );
-};
+}
+
+function EventsTableAlertPlayer() {
+  return (
+    <UiBox className="flex">
+      <div className="flex items-center pr-1 text-sm font-semibold">
+        <BellAlertIcon
+          color="#746BD4"
+          width={24}
+          height={24}
+          className="mr-2 shrink-0"
+        />
+        You can join existing games
+      </div>
+    </UiBox>
+  );
+}

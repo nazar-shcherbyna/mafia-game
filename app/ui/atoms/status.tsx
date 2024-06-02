@@ -1,4 +1,4 @@
-import { EventStatusType } from '@/app/events/types';
+import { EventStatusType } from '@/app/@types/events';
 
 export const UiStatus: React.FC<{
   status: EventStatusType;

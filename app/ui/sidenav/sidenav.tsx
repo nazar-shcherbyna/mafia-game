@@ -1,16 +1,14 @@
-'use client';
-
-import { useTranslate } from '@/app/providers/TranslationsProvider/provider';
+import { UserType } from '@/app/@types/users';
 import { PlayerCard } from './components/player-card';
 import { PlayerStatistic } from './components/player-statistic';
 
-export default function SideNav() {
-  const translate = useTranslate();
+export default async function SideNav({ user }: { user: UserType | null }) {
+  console.log('user', user);
 
   return (
     <div className="flex flex-col gap-6">
-      <PlayerCard />
-      <PlayerStatistic />
+      <PlayerCard user={user} />
+      {user?.role === 'player' && <PlayerStatistic />}
     </div>
   );
 }

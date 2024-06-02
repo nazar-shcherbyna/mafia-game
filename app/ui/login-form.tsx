@@ -20,22 +20,24 @@ export default function LoginForm() {
         placeholder="Enter your nickname"
         type="text"
         className="mb-3"
+        errorMessages={errorMessage?.errors?.nickname}
       />
       <UiFormInputPassword
         name="password"
         label="Password"
         placeholder="Enter your nickname"
+        errorMessages={errorMessage?.errors?.password}
       />
       <LoginButton />
 
-      {errorMessage && (
+      {errorMessage?.message && (
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
           aria-atomic="true"
         >
           <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-          <p className="text-sm text-red-500">{errorMessage}</p>
+          <p className="text-sm text-red-500">{errorMessage.message}</p>
         </div>
       )}
 

@@ -1,12 +1,12 @@
-"use server"
+'use server';
 
-import { mockedRegisteredPlayers } from "@/app/dashboard/game/mockPlayers"
-import { type GameStoreStateType } from "@/app/store"
+import { mockedRegisteredPlayers } from '@/app/dashboard/game/mockPlayers';
+import { type GameStoreStateType } from '@/app/store';
 
 export const getRegisteredGamePlayers = async (gameId: string) => {
-  return mockedRegisteredPlayers
-}
+  return mockedRegisteredPlayers;
+};
 
 export const saveGameResult = async (result: GameStoreStateType) => {
-  return {OK: true}
-}
+  return { OK: true };
+};

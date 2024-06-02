@@ -5,14 +5,23 @@ import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
-import { PlayerType } from './app/@types/types';
+import { UserType } from './app/@types/users';
 import { authConfig } from './auth.config';
 import { settings } from './settings';
 
-async function getUser(nickname: string): Promise<PlayerType | undefined> {
+declare module 'next-auth' {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: UserType;
+  }
+}
+
+async function getUser(nickname: string): Promise<UserType | undefined> {
   try {
     const player =
-      await sql<PlayerType>`SELECT nickname, password FROM players WHERE nickname=${nickname}`;
+      await sql<UserType>`SELECT * FROM players WHERE nickname=${nickname}`;
     return player.rows[0];
   } catch (error) {
     console.error('Failed to fetch player:', error);
@@ -31,7 +40,10 @@ export const { auth, signIn, signOut } = NextAuth({
               .string()
               .min(settings.nickname.minLength)
               .max(settings.nickname.maxLength),
-            password: z.string().min(settings.password.minLength),
+            password: z
+              .string()
+              .min(settings.password.minLength)
+              .max(settings.password.maxLength),
           })
           .safeParse(credentials);
 
@@ -42,11 +54,18 @@ export const { auth, signIn, signOut } = NextAuth({
           if (!user) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (passwordsMatch)
+            return {
+              ...user,
+              name: user.nickname,
+            };
         }
 
-        console.log('Invalid credentials');
         return null;
+      },
+      credentials: {
+        nickname: { label: 'Nickname', type: 'text' },
+        password: { label: 'Password', type: 'password' },
       },
     }),
   ],

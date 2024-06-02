@@ -9,4 +9,4 @@ export interface AuthFormType {
   password: string;
 }
 
-export type RegisteredPlayerGameType = Omit<PlayerType, "password">
+export type RegisteredPlayerGameType = Omit<PlayerType, 'password'>;
