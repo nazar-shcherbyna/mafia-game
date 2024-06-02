@@ -32,7 +32,7 @@ export function EventCard({
       <UiBox className="w-[300px] p-10 sm:w-[440px] md:w-[610px]">
         <div className="mb-4">
           <h3 className="mb-1 text-lg font-semibold text-[#CFD3EC]">
-            Event name {JSON.stringify(user)}
+            Event name
           </h3>
           <p className="text-lg font-normal text-[#746BD4]">{event.title}</p>
         </div>
