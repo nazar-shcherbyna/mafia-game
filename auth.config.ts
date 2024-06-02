@@ -11,19 +11,12 @@ export const authConfig = {
       const isOnEvents = nextUrl.pathname.startsWith('/events');
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return false;
+        return false; // Redirect unauthenticated users to login page
       } else if (isOnEvents) {
         if (isLoggedIn) return true;
-        return false;
+        return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        if (isOnDashboard) {
-          return Response.redirect(new URL('/dashboard', nextUrl));
-        }
-        if (isOnEvents) {
-          return Response.redirect(new URL('/events', nextUrl));
-        }
-
-        return Response.redirect(new URL(nextUrl));
+        return Response.redirect(new URL('/dashboard', nextUrl));
       }
       return true;
     },
