@@ -1,4 +1,3 @@
-import { settings } from '@/settings';
 import { EyeIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
@@ -8,7 +7,8 @@ export const UiFormInputPassword: React.FC<{
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-}> = ({ name, placeholder, disabled, className, label }) => {
+  errorMessages?: string[];
+}> = ({ name, placeholder, disabled, className, label, errorMessages }) => {
   const [inputType, setInputType] =
     React.useState<Extract<React.HTMLInputTypeAttribute, 'password' | 'text'>>(
       'password',
@@ -30,9 +30,9 @@ export const UiFormInputPassword: React.FC<{
       )}
       <div className="relative">
         <input
-          className="w-full 
-          rounded-md
-            border-[1px] border-[#68709B] bg-white px-3
+          className="bg-white 
+          w-full
+            rounded-md border-[1px] border-[#68709B] px-3
             py-2.5 text-sm
             text-[#425197]  outline-none 
             ring-0
@@ -43,16 +43,18 @@ export const UiFormInputPassword: React.FC<{
           type={inputType}
           name={name}
           placeholder={placeholder}
-          required
           aria-disabled={disabled}
-          minLength={settings.password.minLength}
-          maxLength={settings.password.maxLength}
         />
         <EyeIcon
           onClick={handleChangeVisibility}
           className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900"
         />
       </div>
+      {errorMessages?.map((message) => (
+        <p className="py-1 text-sm text-red-500" key={message}>
+          {message}
+        </p>
+      ))}
     </div>
   );
 };

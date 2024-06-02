@@ -1,9 +1,10 @@
+import { UserType } from '@/app/@types/users';
 import { CircleStackIcon, GiftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { UiBox } from '../../atoms/box';
 import { SidebarSignOut } from './sign-out';
 
-export const PlayerCard: React.FC = () => {
+export const PlayerCard: React.FC<{ user: UserType | null }> = ({ user }) => {
   return (
     <UiBox>
       <div className="mb-[16px] flex gap-5 border-b-[1px] border-[#68709B] pb-[16px]">
@@ -17,7 +18,7 @@ export const PlayerCard: React.FC = () => {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <div className="text-[22px] leading-8">Milana Doe</div>
+          <div className="text-[22px] leading-8">{user?.nickname}</div>
           <div className="flex items-center text-[14px] leading-[21px]">
             <CircleStackIcon
               color="#746BD4"

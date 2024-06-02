@@ -6,13 +6,14 @@ export const SidebarSignOut: React.FC = () => {
   return (
     <form
       action={async () => {
+        'use server';
         await signOut();
       }}
     >
       <UiButton
-        className="flex items-center rounded-md border-[1px] border-[#746BD4]
-        bg-[#E3E1FC] px-5 py-2 text-sm font-medium
-        !text-[#746BD4] hover:text-white focus:text-white active:text-white"
+        className="hover:text-white focus:text-white active:text-white flex items-center
+        rounded-md border-[1px] border-[#746BD4] bg-[#E3E1FC] px-5
+        py-2 text-sm font-medium !text-[#746BD4]"
         type="submit"
       >
         <ArrowRightOnRectangleIcon

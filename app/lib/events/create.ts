@@ -5,7 +5,6 @@ import { sql } from '@vercel/postgres';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { EventType } from '../../events/types';
 export interface EventFormErrorsType {
   errors: Record<string, string[]>;
   message: string;
@@ -71,31 +70,5 @@ export async function createEvent(
       }
     }
     throw error;
-  }
-}
-
-export async function fetchEvent(id: string) {
-  try {
-    const events = await sql<EventType>`
-        SELECT * FROM events
-        WHERE id = ${id}
-    `;
-
-    return events.rows[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch events.');
-  }
-}
-
-export async function fetchAllEvents() {
-  try {
-    const events = await sql<EventType>`
-        SELECT * FROM events
-    `;
-    return events.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch events.');
   }
 }

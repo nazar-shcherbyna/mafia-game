@@ -18,6 +18,15 @@ export const GAME_ROLES = {
   [GAME_ROLES_KEYS.KILLER]: { color: 'bg-yellow-500', max: 1 }, //Maniak
 } as const;
 
+export type GamePlayerStatusType =
+  | 'ALIVE'
+  | 'CHECKED_BY_DETECTIVE'
+  | 'HOOKED'
+  | 'KILLED_BY_DAY_VOTE'
+  | 'KILLED_BY_MAFIA'
+  | 'KILLED_BY_KILLER'
+  | 'HILLED';
+
 export const GAME_PLAYER_STATUS = {
   ALIVE: {
     opacity: 'opacity-100',

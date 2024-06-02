@@ -8,3 +8,8 @@ export interface EventType {
   created_date: string;
   status: EventStatusType;
 }
+
+export type EventPlayersType = {
+  event_id: string;
+  player_id: string;
+};
