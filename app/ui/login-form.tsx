@@ -25,7 +25,7 @@ export default function LoginForm() {
       <UiFormInputPassword
         name="password"
         label="Password"
-        placeholder="Enter your nickname"
+        placeholder="Enter your password"
         errorMessages={errorMessage?.errors?.password}
       />
       <LoginButton />
