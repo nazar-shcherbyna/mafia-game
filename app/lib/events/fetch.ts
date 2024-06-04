@@ -25,19 +25,18 @@ export async function fetchEventPlayers(eventId: string, playerId: string) {
   unstable_noStore();
 
   try {
-    const eventPlayers = await sql<PlayerType>`
-      SELECT id, nickname FROM players
+    const eventUsers = await sql<PlayerType>`
+      SELECT id, nickname FROM users
       WHERE id IN (
-        SELECT player_id FROM events_players
+        SELECT user_id FROM events_users
         WHERE event_id = ${eventId}
       );
     `;
-    console.log('eventPlayers:', eventPlayers.rows);
 
-    return eventPlayers.rows;
+    return eventUsers.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch event players.');
+    throw new Error('Failed to fetch event users.');
   }
 }
 
@@ -67,8 +66,8 @@ export async function fetchCountOfPlayerIdInEvent(
     const countOfPlayerIdInEvent = await sql<{
       count: number;
     }>`
-        SELECT COUNT(player_id) FROM events_players
-        WHERE event_id = ${eventId} AND player_id = ${playerId}
+        SELECT COUNT(user_id) FROM events_users
+        WHERE event_id = ${eventId} AND user_id = ${playerId}
         LIMIT 1;
     `;
 

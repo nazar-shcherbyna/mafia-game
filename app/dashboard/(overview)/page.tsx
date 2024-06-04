@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await auth();
+
   const user = session ? await fetchUser(session.user.id) : null;
 
   return (

@@ -12,12 +12,12 @@ import { JoinEventForm } from './join-event-form';
 export function EventCard({
   user,
   event,
-  eventPlayers,
+  eventUsers,
   countOfPlayerIdInEvent,
 }: {
   user: UserType | null;
   event: EventType;
-  eventPlayers: Pick<PlayerType, 'id' | 'nickname'>[];
+  eventUsers: Pick<PlayerType, 'id' | 'nickname'>[];
   countOfPlayerIdInEvent: number | null;
 }) {
   const canJoinToEvent =
@@ -25,7 +25,7 @@ export function EventCard({
     user?.role === 'player' &&
     ['created', 'in-process'].includes(event.status) &&
     countOfPlayerIdInEvent === 0 &&
-    eventPlayers.length < settings.eventMaxPlayersCount;
+    eventUsers.length < settings.eventMaxPlayersCount;
 
   return (
     <NoSSR>
@@ -54,9 +54,9 @@ export function EventCard({
           <h3 className="mb-1 text-lg font-semibold text-[#CFD3EC]">Players</h3>
 
           <UiBox>
-            {eventPlayers.length > 0 ? (
+            {eventUsers.length > 0 ? (
               <ul className="grid grid-cols-6 gap-5">
-                {eventPlayers.map((player) => (
+                {eventUsers.map((player) => (
                   <li className="truncate text-center text-lg" key={player.id}>
                     <Image
                       width={65}

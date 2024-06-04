@@ -16,7 +16,6 @@ export const useDisableNextRound = (): {
   const isDisabledNightRound = Object.keys(notUsedNightActions).length > 0;
 
   const actionsObjCount = getActionsObjCount(playersStore[round]);
-  console.log(actionsObjCount);
   const isDisabledDayRound =
     round !== 0 && !actionsObjCount?.KILLED_BY_DAY_VOTE;
 

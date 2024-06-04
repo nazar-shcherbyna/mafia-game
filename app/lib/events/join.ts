@@ -7,7 +7,7 @@ import { unstable_noStore } from 'next/cache';
 import { fetchCountOfPlayerIdInEvent } from './fetch';
 
 export async function joinEvent(
-  player_id: string,
+  user_id: string,
   event_id: string,
 ): Promise<JoinEventFormStateType | null> {
   unstable_noStore();
@@ -15,7 +15,7 @@ export async function joinEvent(
   try {
     const countOfPlayerIdInEvent = await fetchCountOfPlayerIdInEvent(
       event_id,
-      player_id,
+      user_id,
     );
 
     if (countOfPlayerIdInEvent !== 0) {
@@ -31,8 +31,8 @@ export async function joinEvent(
     }
 
     await sql`
-      INSERT INTO events_players (event_id, player_id)
-      VALUES (${event_id}, ${player_id});
+      INSERT INTO events_users (event_id, user_id)
+      VALUES (${event_id}, ${user_id});
     `;
 
     return null;

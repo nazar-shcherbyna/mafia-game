@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export default function NotFound() {
-  console.log('Not Found');
+  console.error('Not Found');
 
   return (
     <div>
