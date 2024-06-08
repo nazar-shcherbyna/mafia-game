@@ -1,6 +1,6 @@
 'use client';
 
-import { RegisteredPlayerGameType } from '@/app/@types/types';
+import { RegisteredUserGameType } from '@/app/@types/types';
 import { useChangeRoundHook } from '@/app/dashboard/game/hooks/changeRoundHook';
 import { useStartGame } from '@/app/dashboard/game/hooks/useStartGameHook';
 import { Board } from '@/app/dashboard/game/ui/Board';
@@ -13,7 +13,7 @@ export const GameBoard = ({
   registeredPlayers,
 }: {
   gameId: string;
-  registeredPlayers: RegisteredPlayerGameType[];
+  registeredPlayers: RegisteredUserGameType[];
 }) => {
   const round = useGameStore((state) => state.day);
   const isNight = useGameStore((state) => state.isNight);

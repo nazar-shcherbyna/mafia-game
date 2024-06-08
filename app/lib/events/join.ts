@@ -3,7 +3,7 @@
 import { JoinEventFormStateType } from '@/app/@types/events';
 import { settings } from '@/settings';
 import { sql } from '@vercel/postgres';
-import { unstable_noStore } from 'next/cache';
+import { revalidatePath, unstable_noStore } from 'next/cache';
 import { fetchCountOfPlayerIdInEvent } from './fetch';
 
 export async function joinEvent(
@@ -34,6 +34,8 @@ export async function joinEvent(
       INSERT INTO events_users (event_id, user_id)
       VALUES (${event_id}, ${user_id});
     `;
+
+    revalidatePath(`/events/${event_id}`);
 
     return null;
   } catch (error) {

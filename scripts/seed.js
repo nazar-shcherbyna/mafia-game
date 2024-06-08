@@ -1,6 +1,7 @@
 const { db } = require('@vercel/postgres');
 const {
   defautlUsers,
+  testUsers,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -67,6 +68,26 @@ async function createUsersTable(client) {
   }
 }
 
+async function seedTestUsers(client) {
+  try {
+    const insertedUsers = await Promise.all(
+      testUsers.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        return client.sql`
+          INSERT INTO users (nickname, password)
+          VALUES (${user.nickname}, ${hashedPassword});
+        `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedUsers.length} test users`);
+
+  } catch (error) {
+    console.error('Error seeding test users:', error);
+    throw error;
+  }
+}
+
 async function createEventsTable(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -114,6 +135,49 @@ async function createEventsUsersTable(client) {
   }
 }
 
+async function createGamesTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS games (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        event_id UUID NOT NULL,
+        started_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        finished_at TIMESTAMPTZ,
+        round INT NOT NULL DEFAULT 1,
+      );
+  `;
+
+    console.log(`Created "Games" table`);
+
+  } catch (error) {
+    console.error('Error creating table Games:', error);
+    throw error;
+  }
+}
+
+async function createEventsGamesTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS events_games (
+        event_id UUID NOT NULL,
+        game_id UUID NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(id),
+        FOREIGN KEY (game_id) REFERENCES games(id)
+      );
+  `;
+
+    console.log(`Created "EventsGames" table`);
+
+  } catch (error) {
+    console.error('Error creating table EventsGames:', error);
+    throw error;
+  }
+}
+
 async function seedCustomers(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -155,6 +219,8 @@ async function main() {
   await createUsersTable(client);
   await createEventsTable(client);
   await createEventsUsersTable(client);
+
+  await seedTestUsers(client);
 
   await client.end();
 }

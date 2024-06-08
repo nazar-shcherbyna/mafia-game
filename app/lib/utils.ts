@@ -1,3 +1,6 @@
+import { settings } from '@/settings';
+import { EventType } from '../@types/events';
+import { UserType } from '../@types/users';
 import { Revenue } from './definitions';
 
 export const formatCurrency = (amount: number) => {
@@ -66,4 +69,20 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     '...',
     totalPages,
   ];
+};
+
+export const canPlayerJoinEvent = (
+  user: UserType,
+  event: EventType,
+  eventUsers: Pick<UserType, 'id' | 'nickname'>[],
+  countOfPlayerIdInEvent: number | null,
+) => {
+  return (
+    user &&
+    user.role === 'player' &&
+    event &&
+    ['created', 'in-process'].includes(event.status) &&
+    countOfPlayerIdInEvent === 0 &&
+    eventUsers.length < settings.eventMaxPlayersCount
+  );
 };
