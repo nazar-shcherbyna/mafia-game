@@ -6,7 +6,7 @@ import { joinEvent } from '@/app/lib/events/join';
 import { UiButton } from '@/app/ui/atoms/button';
 import { useFormState, useFormStatus } from 'react-dom';
 
-export const JoinEventForm: React.FC<{
+export const StartEventForm: React.FC<{
   user: Pick<UserType, 'id'>;
   event: Pick<EventType, 'id'>;
   className?: string;

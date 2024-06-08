@@ -9,9 +9,9 @@ export interface EventType {
   status: EventStatusType;
 }
 
-export type EventPlayersType = {
+export type EventUsersType = {
   event_id: string;
-  player_id: string;
+  user_id: string;
 };
 
 export interface JoinEventFormStateType {

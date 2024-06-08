@@ -8,9 +8,9 @@ import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';
 
-export default function CreateEventForm() {
-  const [formState, dispatch] = useFormState(createEvent, undefined);
-  console.log(formState);
+export default function CreateEventForm({ adminId }: { adminId: string }) {
+  const createEventWithAdminId = createEvent.bind(null, adminId);
+  const [formState, dispatch] = useFormState(createEventWithAdminId, undefined);
 
   return (
     <UiFormCard action={dispatch} label="New event">

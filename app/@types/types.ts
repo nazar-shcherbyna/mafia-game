@@ -1,12 +1,8 @@
-export interface PlayerType {
-  id: string;
-  nickname: string;
-  password: string;
-}
+import { UserType } from './users';
 
 export interface AuthFormType {
   nickname: string;
   password: string;
 }
 
-export type RegisteredPlayerGameType = Omit<PlayerType, 'password'>;
+export type RegisteredUserGameType = Pick<UserType, 'id' | 'nickname'>;

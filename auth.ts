@@ -21,7 +21,7 @@ declare module 'next-auth' {
 async function getUser(nickname: string): Promise<UserType | undefined> {
   try {
     const player =
-      await sql<UserType>`SELECT * FROM players WHERE nickname=${nickname}`;
+      await sql<UserType>`SELECT * FROM users WHERE nickname=${nickname} LIMIT 1`;
     return player.rows[0];
   } catch (error) {
     console.error('Failed to fetch player:', error);
@@ -58,6 +58,7 @@ export const { auth, signIn, signOut } = NextAuth({
             return {
               ...user,
               name: user.nickname,
+              id: user.id,
             };
         }
 

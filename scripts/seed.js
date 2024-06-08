@@ -1,75 +1,179 @@
 const { db } = require('@vercel/postgres');
 const {
-  invoices,
-  customers,
-  revenue,
-  defautlPlayers,
+  defautlUsers,
+  testUsers,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
-async function seedPlayers(client) {
+async function createUserRoleEnum(client) {
+  await client.sql`
+  DO $$
+    BEGIN
+      IF 
+        NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') 
+      THEN 
+      CREATE TYPE user_role_enum AS ENUM ('player', 'admin');
+      END IF;
+    END $$;
+  `;
+}
+
+async function createEventStatusEnum(client) {
+  await client.sql`
+  DO $$
+    BEGIN
+      IF 
+        NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'event_status_enum') 
+      THEN 
+        CREATE TYPE event_status_enum AS ENUM ('created', 'in-progress', 'completed');
+      END IF;
+    END $$;
+  `;
+}
+
+async function createUsersTable(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-    // Create the "players" table if it doesn't exist
-    const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS players (
+    await createUserRoleEnum(client);
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS users (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        nickname VARCHAR(20) NOT NULL,
+        nickname VARCHAR(255) NOT NULL,
         password TEXT NOT NULL,
-        join_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        role VARCHAR(20) DEFAULT 'player'
+        joined_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        role user_role_enum DEFAULT 'player'
       );
     `;
 
-    console.log(`Created "Players" table`);
+    console.log(`Created "Users" table`);
 
-    // Insert data into the "Players" table
-    const insertedPlayers = await Promise.all(
-      defautlPlayers.map(async (player) => {
-        const hashedPassword = await bcrypt.hash(player.password, 10);
+    // Insert default data into the "users" table
+    const insertedUsers = await Promise.all(
+      defautlUsers.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-          INSERT INTO players (id, nickname, join_date, password, role)
-          VALUES (${player.id}, ${player.nickname}, CURRENT_TIMESTAMP, ${hashedPassword}, 'admin')
+          INSERT INTO users (nickname, password, role)
+          VALUES (${user.nickname}, ${hashedPassword}, 'admin')
           ON CONFLICT (id) DO NOTHING;
         `;
       }),
     );
 
-    console.log(`Seeded ${insertedPlayers.length} Players`);
+    console.log(`Seeded ${insertedUsers.length} Users`);
 
-    return {
-      createTable,
-      players: insertedPlayers,
-    };
   } catch (error) {
-    console.error('Error seeding Players:', error);
+    console.error('Error creating table Users:', error);
     throw error;
   }
 }
 
-async function seedEvents(client) {
+async function seedTestUsers(client) {
+  try {
+    const insertedUsers = await Promise.all(
+      testUsers.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        return client.sql`
+          INSERT INTO users (nickname, password)
+          VALUES (${user.nickname}, ${hashedPassword});
+        `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedUsers.length} test users`);
+
+  } catch (error) {
+    console.error('Error seeding test users:', error);
+    throw error;
+  }
+}
+
+async function createEventsTable(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    await createEventStatusEnum(client);
 
-    // Create the "events" table if it doesn't exist
-    const createTable = await client.sql`
+    await client.sql`
       CREATE TABLE IF NOT EXISTS events (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        title VARCHAR(20) NOT NULL,
+        admin_id UUID NOT NULL,
+        title VARCHAR(255) NOT NULL,
         date TIMESTAMPTZ NOT NULL,
-        location VARCHAR(20) NOT NULL,
-        created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        status event_status_type DEFAULT 'created'
+        location VARCHAR(255) NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        status event_status_enum DEFAULT 'created',
+        FOREIGN KEY (admin_id) REFERENCES users(id)
       );
   `;
 
-    console.log(`Created "events" table`);
+    console.log(`Created "Events" table`);
 
-    return {
-      createTable,
-    };
   } catch (error) {
-    console.error('Error seeding events:', error);
+    console.error('Error creating table Events:', error);
+    throw error;
+  }
+}
+
+async function createEventsUsersTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS events_users (
+        event_id UUID,
+        user_id UUID NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(id),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      );
+  `;
+
+    console.log(`Created "EventsUsers" table`);
+
+  } catch (error) {
+    console.error('Error creating table EventsUsers:', error);
+    throw error;
+  }
+}
+
+async function createGamesTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS games (
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        event_id UUID NOT NULL,
+        started_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        finished_at TIMESTAMPTZ,
+        round INT NOT NULL DEFAULT 1,
+      );
+  `;
+
+    console.log(`Created "Games" table`);
+
+  } catch (error) {
+    console.error('Error creating table Games:', error);
+    throw error;
+  }
+}
+
+async function createEventsGamesTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS events_games (
+        event_id UUID NOT NULL,
+        game_id UUID NOT NULL,
+        FOREIGN KEY (event_id) REFERENCES events(id),
+        FOREIGN KEY (game_id) REFERENCES games(id)
+      );
+  `;
+
+    console.log(`Created "EventsGames" table`);
+
+  } catch (error) {
+    console.error('Error creating table EventsGames:', error);
     throw error;
   }
 }
@@ -103,47 +207,8 @@ async function seedCustomers(client) {
 
     console.log(`Seeded ${insertedCustomers.length} customers`);
 
-    return {
-      createTable,
-      customers: insertedCustomers,
-    };
   } catch (error) {
     console.error('Error seeding customers:', error);
-    throw error;
-  }
-}
-
-async function seedRevenue(client) {
-  try {
-    // Create the "revenue" table if it doesn't exist
-    const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS revenue (
-        month VARCHAR(4) NOT NULL UNIQUE,
-        revenue INT NOT NULL
-      );
-    `;
-
-    console.log(`Created "revenue" table`);
-
-    // Insert data into the "revenue" table
-    const insertedRevenue = await Promise.all(
-      revenue.map(
-        (rev) => client.sql`
-        INSERT INTO revenue (month, revenue)
-        VALUES (${rev.month}, ${rev.revenue})
-        ON CONFLICT (month) DO NOTHING;
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedRevenue.length} revenue`);
-
-    return {
-      createTable,
-      revenue: insertedRevenue,
-    };
-  } catch (error) {
-    console.error('Error seeding revenue:', error);
     throw error;
   }
 }
@@ -151,8 +216,11 @@ async function seedRevenue(client) {
 async function main() {
   const client = await db.connect();
 
-  await seedPlayers(client);
-  await seedEvents(client);
+  await createUsersTable(client);
+  await createEventsTable(client);
+  await createEventsUsersTable(client);
+
+  await seedTestUsers(client);
 
   await client.end();
 }

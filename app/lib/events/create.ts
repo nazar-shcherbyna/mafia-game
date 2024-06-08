@@ -29,6 +29,7 @@ const EventFormSchema = z.object({
 });
 
 export async function createEvent(
+  adminId: string,
   prevState: EventFormErrorsType | undefined,
   formData: FormData,
 ): Promise<EventFormErrorsType | undefined> {
@@ -46,8 +47,8 @@ export async function createEvent(
       const eventId = crypto.randomUUID();
 
       await sql`
-            INSERT INTO events (id, title, date, location)
-            VALUES (${eventId}, ${title}, ${formattedDate}, ${location})
+            INSERT INTO events (id, title, date, location, admin_id)
+            VALUES (${eventId}, ${title}, ${formattedDate}, ${location}, ${adminId})
         `;
 
       // TODO find out do I need to revalidatePath or not

@@ -17,7 +17,7 @@ export default function RegistrationForm() {
       <UiFormInput
         name="nickname"
         label="Nickname"
-        placeholder="Enter your nickname"
+        placeholder="Create nickname"
         type="text"
         className="mb-3"
         errorMessages={errorMessage?.errors?.nickname}
@@ -25,14 +25,14 @@ export default function RegistrationForm() {
       <UiFormInputPassword
         name="password"
         label="Password"
-        placeholder="Enter your password"
+        placeholder="Create password"
         className="mb-3"
         errorMessages={errorMessage?.errors?.password}
       />
       <UiFormInputPassword
         name="confirmPassword"
         label="Confirm password"
-        placeholder="Enter your password"
+        placeholder="Confirm password"
         errorMessages={errorMessage?.errors?.confirmPassword}
       />
       <RegisterButton />

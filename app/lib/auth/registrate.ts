@@ -1,6 +1,6 @@
 'use server';
 
-import { PlayerType } from '@/app/@types/types';
+import { UserType } from '@/app/@types/users';
 import { signIn } from '@/auth';
 import { settings } from '@/settings';
 import { sql } from '@vercel/postgres';
@@ -62,7 +62,7 @@ export async function registrate(
       };
     }
 
-    const isPlayerExists = await checkIfPlayerNicknameAlreadyExist(
+    const isPlayerExists = await checkIfUserNicknameAlreadyExist(
       validatedFields.data.nickname,
     );
 
@@ -76,13 +76,13 @@ export async function registrate(
     const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
 
     await sql`
-        INSERT INTO players (nickname, password) 
+        INSERT INTO users (nickname, password) 
         VALUES (${validatedFields.data.nickname}, ${hashedPassword})
       `;
 
     await signIn('credentials', validatedFields.data);
   } catch (error) {
-    console.log(`Failed to create player: ${error}`);
+    console.error(`Failed to create user: ${error}`);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -101,8 +101,9 @@ export async function registrate(
   }
 }
 
-async function checkIfPlayerNicknameAlreadyExist(nickname: string) {
-  const player =
-    await sql<PlayerType>`SELECT nickname FROM players WHERE nickname = ${nickname}`;
+async function checkIfUserNicknameAlreadyExist(nickname: string) {
+  const player = await sql<
+    Pick<UserType, 'nickname'>
+  >`SELECT nickname FROM users WHERE nickname = ${nickname}`;
   return Boolean(player.rows.length);
 }
