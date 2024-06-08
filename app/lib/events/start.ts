@@ -29,15 +29,15 @@ export async function startEvent(
       };
     }
 
-    if (event.status === 'in-process') {
+    if (event.status === 'in-progress') {
       return {
         message: 'Event is already has started.',
       };
     }
 
-    if (event.status === 'finished') {
+    if (event.status === 'completed') {
       return {
-        message: 'Event is finished.',
+        message: 'Event is completed.',
       };
     }
 

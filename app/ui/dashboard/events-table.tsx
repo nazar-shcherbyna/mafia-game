@@ -1,5 +1,5 @@
 import { fetchAllEvents } from '@/app/lib/events/fetch';
-import { UiStatus } from '../atoms/status';
+import { UiEventStatus } from '../atoms/status';
 import { UiLink } from '../link';
 
 export default async function EventsTable() {
@@ -52,7 +52,7 @@ export default async function EventsTable() {
               <td className="px-6 py-3.5">{event.title}</td>
               <td className="px-6 py-3.5 capitalize">{event.location}</td>
               <td className="px-6 py-3.5">
-                <UiStatus status={event.status} />
+                <UiEventStatus status={event.status} />
               </td>
               <td className="px-6 py-3.5">9/12</td>
               <td className="px-6 py-3.5">
