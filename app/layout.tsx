@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     title: 'Mafia Game',
+    siteName: 'Mafia Game',
     description: 'Desktop game for playing Mafia with friends online.',
     images: [
       {
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
         alt: 'Mafia Game',
       },
     ],
+    url: 'https://mafia-game.vercel.app',
   },
 };
 
