@@ -1,9 +1,9 @@
-import { EventStatusType } from '@/app/@types/events';
+import { EventType } from '@/app/@types/events';
 
-export const UiStatus: React.FC<{
-  status: EventStatusType;
+export const UiEventStatus: React.FC<{
+  status: EventType['status'];
 }> = ({ status }) => {
-  if (status === 'in-process') {
+  if (status === 'in-progress') {
     return (
       <span className="rounded-full bg-[#203C3D] px-5 py-1.5 capitalize text-[#28C76F]">
         {status}
@@ -11,7 +11,7 @@ export const UiStatus: React.FC<{
     );
   }
 
-  if (status === 'finished') {
+  if (status === 'completed') {
     return (
       <span className="rounded-full bg-[#3F2A38] px-5 py-1.5 capitalize text-[#EA5455]">
         {status}

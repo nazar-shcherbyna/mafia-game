@@ -77,11 +77,16 @@ export const canPlayerJoinEvent = (
   eventUsers: Pick<UserType, 'id' | 'nickname'>[],
   countOfPlayerIdInEvent: number | null,
 ) => {
+  const accessedEventStatuses: EventType['status'][] = [
+    'created',
+    'in-progress',
+  ];
+
   return (
     user &&
     user.role === 'player' &&
     event &&
-    ['created', 'in-process'].includes(event.status) &&
+    accessedEventStatuses.includes(event.status) &&
     countOfPlayerIdInEvent === 0 &&
     eventUsers.length < settings.eventMaxPlayersCount
   );

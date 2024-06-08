@@ -20,7 +20,9 @@ export const metadata: Metadata = {
   category: 'Games',
   twitter: {
     card: 'summary_large_image',
-    site: '@mafia_game',
+    site: 'https://mafia-game.vercel.app',
+    creator: 'Nazar Shcherbyna',
+    title: 'Mafia Game',
     description: 'Desktop game for playing Mafia with friends online.',
   },
   openGraph: {
