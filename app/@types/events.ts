@@ -1,4 +1,4 @@
-import { DBEventStatusEnumType } from './db-enums';
+import { DBEventStatusEnum } from './db-enums';
 
 export interface EventType {
   id: string;
@@ -6,7 +6,7 @@ export interface EventType {
   date: Date;
   location: string;
   created_date: string;
-  status: DBEventStatusEnumType;
+  status: DBEventStatusEnum;
 }
 
 export type EventUsersType = {
