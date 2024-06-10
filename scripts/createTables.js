@@ -92,27 +92,6 @@ async function createGamesTable(client) {
     }
 }
   
-async function createEventsGamesTable(client) {
-    try {
-      await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  
-      await client.sql`
-        CREATE TABLE IF NOT EXISTS events_games (
-          event_id UUID NOT NULL,
-          game_id UUID NOT NULL,
-          FOREIGN KEY (event_id) REFERENCES events(id),
-          FOREIGN KEY (game_id) REFERENCES games(id)
-        );
-    `;
-  
-      console.log(`Created "EventsGames" table`);
-  
-    } catch (error) {
-      console.error('Error creating table EventsGames:', error);
-      throw error;
-    }
-}
-  
 async function createGamesPlayersTable(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;

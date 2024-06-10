@@ -1,6 +1,6 @@
 'use server';
 
-import { UserType } from '@/app/@types/users';
+import { DBUserType } from '@/app/@types/db-types';
 import { signIn } from '@/auth';
 import { settings } from '@/settings';
 import { sql } from '@vercel/postgres';
@@ -103,7 +103,7 @@ export async function registrate(
 
 async function checkIfUserNicknameAlreadyExist(nickname: string) {
   const player = await sql<
-    Pick<UserType, 'nickname'>
+    Pick<DBUserType, 'nickname'>
   >`SELECT nickname FROM users WHERE nickname = ${nickname}`;
   return Boolean(player.rows.length);
 }

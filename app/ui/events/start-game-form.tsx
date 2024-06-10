@@ -1,29 +1,29 @@
 'use client';
 
-import { EventType } from '@/app/@types/events';
-import { UserType } from '@/app/@types/users';
-import { joinEvent } from '@/app/lib/events/join';
+import { DBEventType, DBUserType } from '@/app/@types/db-types';
+
+import { startEvent } from '@/app/lib/events/start';
 import { UiButton } from '@/app/ui/atoms/button';
 import { useFormState, useFormStatus } from 'react-dom';
 
-export const StartEventForm: React.FC<{
-  user: Pick<UserType, 'id'>;
-  event: Pick<EventType, 'id'>;
+export const StartGameForm: React.FC<{
+  user: Pick<DBUserType, 'id'>;
+  event: Pick<DBEventType, 'id'>;
   className?: string;
 }> = ({ event, user, className }) => {
-  const joinEventWithPlayerIdAndEventId = joinEvent.bind(
+  const startEventWithAdminIdAndEventId = startEvent.bind(
     null,
     user.id,
     event.id,
   );
 
   const [formState, dispatch] = useFormState(
-    joinEventWithPlayerIdAndEventId,
+    startEventWithAdminIdAndEventId,
     null,
   );
   return (
     <form action={dispatch} className={className}>
-      <JoinButton />
+      <StartButton />
       {formState?.message && (
         <p className="mt-4 text-red-500">{formState.message}</p>
       )}
@@ -31,12 +31,12 @@ export const StartEventForm: React.FC<{
   );
 };
 
-function JoinButton() {
+function StartButton() {
   const { pending } = useFormStatus();
 
   return (
     <UiButton type="submit" className="w-full" aria-disabled={pending}>
-      Join
+      Start game
     </UiButton>
   );
 }

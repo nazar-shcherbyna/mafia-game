@@ -1,14 +1,14 @@
 'use client';
 
-import { EventType } from '@/app/@types/events';
-import { UserType } from '@/app/@types/users';
+import { DBEventType, DBUserType } from '@/app/@types/db-types';
+
 import { joinEvent } from '@/app/lib/events/join';
 import { UiButton } from '@/app/ui/atoms/button';
 import { useFormState, useFormStatus } from 'react-dom';
 
 export const JoinEventForm: React.FC<{
-  user: Pick<UserType, 'id'>;
-  event: Pick<EventType, 'id'>;
+  user: Pick<DBUserType, 'id'>;
+  event: Pick<DBEventType, 'id'>;
   className?: string;
 }> = ({ event, user, className }) => {
   const joinEventWithPlayerIdAndEventId = joinEvent.bind(

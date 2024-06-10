@@ -1,10 +1,10 @@
-import { UserType } from '@/app/@types/users';
+import { DBUserType } from '@/app/@types/db-types';
 import { BellAlertIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import { UiBox } from '../atoms/box';
 import { UiLink } from '../link';
 
 export const EventsTableAlert: React.FC<{
-  user: UserType | null;
+  user: DBUserType | null;
 }> = ({ user }) => {
   if (user?.role === 'admin') {
     return <EventsTableAlertAdmin />;

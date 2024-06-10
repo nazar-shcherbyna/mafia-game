@@ -1,8 +1,8 @@
 import { DBEventStatusEnum } from '@/app/@types/db-enums';
-import { EventType } from '@/app/@types/events';
+import { DBEventType } from '@/app/@types/db-types';
 
 export const UiEventStatus: React.FC<{
-  status: EventType['status'];
+  status: DBEventType['status'];
 }> = ({ status }) => {
   if (status === DBEventStatusEnum.inProgress) {
     return (

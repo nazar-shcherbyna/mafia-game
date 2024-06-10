@@ -1,4 +1,4 @@
-import { UserType } from '@/app/@types/users';
+import { DBUserType } from '@/app/@types/db-types';
 import {
   CircleStackIcon,
   GiftIcon,
@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { UiBox } from '../../atoms/box';
 import { SidebarSignOut } from './sign-out';
 
-export const PlayerCard: React.FC<{ user: UserType | null }> = ({ user }) => {
+export const PlayerCard: React.FC<{ user: DBUserType | null }> = ({ user }) => {
   return (
     <UiBox>
       <div className="mb-[16px] flex gap-5 border-b-[1px] border-[#68709B] pb-[16px]">

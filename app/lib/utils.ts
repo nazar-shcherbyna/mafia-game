@@ -1,6 +1,7 @@
 import { settings } from '@/settings';
-import { EventType } from '../@types/events';
-import { UserType } from '../@types/users';
+import { DBEventStatusEnum } from '../@types/db-enums';
+import type { DBEventType, DBUserType } from '../@types/db-types';
+
 import { Revenue } from './definitions';
 
 export const formatCurrency = (amount: number) => {
@@ -72,14 +73,14 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 };
 
 export const canPlayerJoinEvent = (
-  user: UserType,
-  event: EventType,
-  eventUsers: Pick<UserType, 'id' | 'nickname'>[],
+  user: DBUserType,
+  event: DBEventType,
+  eventUsers: Pick<DBUserType, 'id' | 'nickname'>[],
   countOfPlayerIdInEvent: number | null,
 ) => {
-  const accessedEventStatuses: EventType['status'][] = [
-    'created',
-    'in-progress',
+  const accessedEventStatuses: DBEventType['status'][] = [
+    DBEventStatusEnum.created,
+    DBEventStatusEnum.inProgress,
   ];
 
   return (

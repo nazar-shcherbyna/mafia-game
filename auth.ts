@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
-import { UserType } from './app/@types/users';
+import { DBUserType } from './app/@types/db-types';
 import { authConfig } from './auth.config';
 import { settings } from './settings';
 
@@ -14,14 +14,14 @@ declare module 'next-auth' {
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: UserType;
+    user: DBUserType;
   }
 }
 
-async function getUser(nickname: string): Promise<UserType | undefined> {
+async function getUser(nickname: string): Promise<DBUserType | undefined> {
   try {
     const player =
-      await sql<UserType>`SELECT * FROM users WHERE nickname=${nickname} LIMIT 1`;
+      await sql<DBUserType>`SELECT * FROM users WHERE nickname=${nickname} LIMIT 1`;
     return player.rows[0];
   } catch (error) {
     console.error('Failed to fetch player:', error);

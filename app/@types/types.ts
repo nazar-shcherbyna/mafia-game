@@ -1,8 +1,8 @@
-import { UserType } from './users';
+import { DBUserType } from './db-types';
 
 export interface AuthFormType {
   nickname: string;
   password: string;
 }
 
-export type RegisteredUserGameType = Pick<UserType, 'id' | 'nickname'>;
+export type RegisteredUserGameType = Pick<DBUserType, 'id' | 'nickname'>;

@@ -6,6 +6,7 @@ import {
   fetchEvent,
   fetchEventModerator,
   fetchEventPlayers,
+  fetchEventStartedGames,
 } from '../../lib/events/fetch';
 import { EventCard } from '../../ui/events/event-card';
 
@@ -22,6 +23,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     ? await fetchCountOfPlayerIdInEvent(params.id, user.id)
     : null;
   const eventModerator = await fetchEventModerator(params.id);
+  const eventActiveGames = await fetchEventStartedGames(params.id);
 
   if (event === null || user === null || eventModerator === null) {
     return <div>Event not found.</div>;
@@ -34,6 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       eventUsers={eventUsers}
       eventModerator={eventModerator}
       countOfPlayerIdInEvent={countOfPlayerIdInEvent}
+      eventActiveGames={eventActiveGames}
     />
   );
 }

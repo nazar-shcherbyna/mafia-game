@@ -1,11 +1,10 @@
-import { EventType } from '@/app/@types/events';
-import { UserType } from '@/app/@types/users';
+import { DBEventType, DBUserType } from '@/app/@types/db-types';
 import Image from 'next/image';
 
 export const EventCardDescription: React.FC<{
-  user: UserType;
-  event: EventType;
-  eventModerator: Pick<UserType, 'id' | 'nickname'>;
+  user: DBUserType;
+  event: DBEventType;
+  eventModerator: Pick<DBUserType, 'id' | 'nickname'>;
 }> = ({ user, event, eventModerator }) => {
   return (
     <div className="mb-6 flex items-start gap-6">

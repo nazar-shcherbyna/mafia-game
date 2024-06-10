@@ -1,4 +1,5 @@
 import { fetchAllEvents } from '@/app/lib/events/fetch';
+import { settings } from '@/settings';
 import { UiEventStatus } from '../atoms/status';
 import { UiLink } from '../link';
 
@@ -54,7 +55,9 @@ export default async function EventsTable() {
               <td className="px-6 py-3.5">
                 <UiEventStatus status={event.status} />
               </td>
-              <td className="px-6 py-3.5">9/12</td>
+              <td className="px-6 py-3.5">
+                {event.players_count}/{settings.eventMaxPlayersCount}
+              </td>
               <td className="px-6 py-3.5">
                 <UiLink
                   className="rounded-md px-5 py-1.5 text-xs font-medium"
