@@ -1,3 +1,7 @@
+import {
+  DBGamePlayerRoleEnum,
+  DBGameRoundPlayerStatusEnum,
+} from '@/app/@types/db-enums';
 import { GAME_PLAYER_STATUS, GAME_ROLES } from '@/app/dashboard/game/constans';
 import { useGetCurrentDayOrNightStore } from '@/app/dashboard/game/hooks/hooks';
 import {
@@ -30,10 +34,10 @@ export const SitEditor = () => {
     findGamePlayerBySitPlace(selectedSit, gamePlayers || {});
   const [playerId, setPlayerId] = useState<string>(currentPlayerId || '');
   const [role, setRole] = useState<GamePlayerRolesKeysType>(
-    currentPlayer?.role || 'CIVILIAN',
+    currentPlayer?.role || DBGamePlayerRoleEnum.civilian,
   );
   const [status, setStatus] = useState<GamePlayerStatusKeysType>(
-    currentPlayer?.status || 'ALIVE',
+    currentPlayer?.status || DBGameRoundPlayerStatusEnum.alive,
   );
 
   const [actions, setActions] = useState<GamePlayerStatusKeysType[]>(
@@ -223,7 +227,9 @@ export const SitEditor = () => {
       <PropertyWrapper>
         <UiButton onClick={() => setSelectedSit(undefined)}>Close</UiButton>
         <UiButton
-          onClick={() => setActions((ac) => [...ac, 'ALIVE'])}
+          onClick={() =>
+            setActions((ac) => [...ac, DBGameRoundPlayerStatusEnum.alive])
+          }
           disabled={!day || !playerId}
           aria-disabled={!day || !playerId}
         >

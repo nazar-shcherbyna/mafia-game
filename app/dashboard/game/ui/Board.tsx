@@ -14,7 +14,7 @@ export const Board: React.FC<{
         {/* {selectedSit && <SitEditor />}
         {!selectedSit && !!roundReport.length && <RoundReport />} */}
       </div>
-      <PlayersRow>
+      {/* <PlayersRow>
         {Array.from({ length: 5 }, (_, index) => (
           <PlayerDotWrapper key={index} index={1 + index}></PlayerDotWrapper>
         ))}
@@ -36,7 +36,7 @@ export const Board: React.FC<{
         {Array.from({ length: 3 }, (_, index) => (
           <PlayerDotWrapper key={index} index={14 + index}></PlayerDotWrapper>
         ))}
-      </PlayersColumn>
+      </PlayersColumn> */}
     </div>
   );
 };

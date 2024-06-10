@@ -55,27 +55,6 @@ export const getActionsObjCount = (
 export const checkWinner = (gamePlayers: PlayerGameDictType) => {
   const rolesDict = getAliveRolesObjCount(gamePlayers);
   if (rolesDict === null || !Object.values(rolesDict).length) return;
-
-  const alive = Object.values(rolesDict).reduce((acc, item) => {
-    acc += item;
-    return acc;
-  }, 0);
-
-  if (
-    (rolesDict.MAFIA ||
-      0 + rolesDict.GODFATHER ||
-      0 + rolesDict.HOOKER ||
-      0) === 0
-  )
-    window.alert('CIVILIAN WIN');
-  if (
-    (rolesDict.CIVILIAN ||
-      0 + rolesDict.DETECTIVE ||
-      0 + rolesDict.DOCTOR ||
-      0) === 0
-  )
-    window.alert('MAFIA WIN');
-  if (alive <= 2 && rolesDict.KILLER) window.alert('KILLER WIN'); // Wins when among final 2 alive
 };
 
 export const getNotUsedNightActions = (gamePlayers: PlayerGameDictType) => {

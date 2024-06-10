@@ -3,7 +3,6 @@
 import { RegisteredUserGameType } from '@/app/@types/types';
 import { useChangeRoundHook } from '@/app/dashboard/game/hooks/changeRoundHook';
 import { useStartGame } from '@/app/dashboard/game/hooks/useStartGameHook';
-import { Board } from '@/app/dashboard/game/ui/Board';
 import { useGameStore } from '@/app/store';
 import { UiButton } from '@/app/ui/atoms/button';
 import { useDisableNextRound } from './hooks/useDisableNextRound';
@@ -55,7 +54,7 @@ export const GameBoard = ({
         </UiButton>
       </div>
 
-      <Board />
+      {/* <Board /> */}
 
       <div className="absolute bottom-3 flex w-full items-center justify-between">
         <UiButton onClick={restartHandler}>Restart</UiButton>
