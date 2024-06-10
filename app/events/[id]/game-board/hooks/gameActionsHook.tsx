@@ -1,6 +1,5 @@
 import { GAME_PLAYER_STATUS } from '@/app/dashboard/game/constans';
 import {
-  GamePlayerStatusKeysType,
   PlayerGameDictType,
   RoundReportInterface,
 } from '@/app/dashboard/game/types';
@@ -18,7 +17,7 @@ export const useCalculateGameActionsHook = () => {
 
     const newStatuses = Object.entries(previousPlayers).reduce(
       (acc, [id, player]) => {
-        const status: GamePlayerStatusKeysType =
+        const status =
           GAME_PLAYER_STATUS[player.status].maxTime < 999
             ? 'ALIVE'
             : player.status;
