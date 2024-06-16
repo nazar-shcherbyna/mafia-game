@@ -1,9 +1,9 @@
-import { GAME_PLAYER_STATUS } from '@/app/dashboard/game/constans';
 import {
   PlayerGameDictType,
   RoundReportInterface,
 } from '@/app/dashboard/game/types';
 import { useGameStore } from '@/app/store';
+import { GAME_PLAYER_STATUS } from '../constans';
 
 export const useCalculateGameActionsHook = () => {
   const [roundReport, setRoundReport] = useGameStore((state) => [

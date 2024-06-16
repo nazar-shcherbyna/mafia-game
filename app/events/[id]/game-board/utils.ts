@@ -1,9 +1,9 @@
-import { GAME_PLAYER_STATUS } from '@/app/dashboard/game/constans';
 import {
   GamePlayerRolesKeysType,
   GamePlayerStatusKeysType,
   type PlayerGameDictType,
 } from '@/app/dashboard/game/types';
+import { GAME_PLAYER_STATUS } from './constans';
 
 export const findGamePlayerBySitPlace = (
   sitPlace: number,
