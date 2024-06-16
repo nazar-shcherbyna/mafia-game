@@ -17,7 +17,7 @@ export const fetchGamePlayers = async (gameId: string) => {
   try {
     const gamePlayers = await sql<FetchGamePlayerType>`
       SELECT id, nickname, game_role, position_number, role FROM users 
-      JOIN games_players ON users.id = games_players.player_id
+      LEFT JOIN games_players ON users.id = games_players.player_id
       WHERE game_id = ${gameId}
       ORDER BY position_number;
     `;
@@ -38,7 +38,7 @@ export const fetchPlayerByPosition = async (
   try {
     const player = await sql<FetchGamePlayerType>`
       SELECT id, nickname, game_role, position_number, role FROM users 
-      JOIN games_players ON users.id = games_players.player_id
+      LEFT JOIN games_players ON users.id = games_players.player_id
       WHERE game_id = ${gameId} AND position_number = ${position};
     `;
 

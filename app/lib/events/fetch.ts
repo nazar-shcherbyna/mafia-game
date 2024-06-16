@@ -39,7 +39,8 @@ export async function fetchEventPlayers(eventId: string) {
       Pick<DBUserType & DBEventPlayerType, 'id' | 'nickname' | 'status'>
     >`
       SELECT id, nickname, status FROM users 
-      JOIN events_players ON users.id = events_players.player_id;
+      LEFT JOIN events_players ON users.id = events_players.player_id
+      WHERE event_id = ${eventId};
     `;
 
     return eventUsers.rows;
@@ -75,8 +76,6 @@ export async function fetchEventModerator(eventId: string) {
 export async function fetchAllEvents() {
   unstable_noStore();
 
-  // await new Promise((resolve) => setTimeout(resolve, 5000));
-
   try {
     const events = await sql<
       DBEventType & {
@@ -84,12 +83,14 @@ export async function fetchAllEvents() {
       }
     >`
           SELECT * FROM events
-          JOIN (
+          LEFT JOIN (
             SELECT event_id, COUNT(player_id) as players_count
             FROM events_players
             GROUP BY event_id
           ) as players ON events.id = players.event_id
+          ORDER BY created_at DESC;
       `;
+
     return events.rows;
   } catch (error) {
     console.error('Database Error:', error);

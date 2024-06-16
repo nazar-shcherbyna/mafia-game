@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const session = await auth();
   const user = session ? await fetchUser(session.user.id) : null;
   const event = await fetchEvent(params.id);
-  const eventUsers = user ? await fetchEventPlayers(params.id) : [];
+  const eventPlayers = user ? await fetchEventPlayers(params.id) : [];
   const countOfPlayerIdInEvent = user
     ? await fetchCountOfPlayerIdInEvent(params.id, user.id)
     : null;
@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     <EventCard
       event={event}
       user={user}
-      eventUsers={eventUsers}
+      eventPlayers={eventPlayers}
       eventModerator={eventModerator}
       countOfPlayerIdInEvent={countOfPlayerIdInEvent}
       eventActiveGames={eventActiveGames}

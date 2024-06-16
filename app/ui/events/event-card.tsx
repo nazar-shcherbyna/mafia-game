@@ -14,14 +14,14 @@ import { StartGameForm } from './start-game-form';
 export function EventCard({
   user,
   event,
-  eventUsers,
+  eventPlayers,
   eventModerator,
   countOfPlayerIdInEvent,
   eventActiveGames,
 }: {
   user: DBUserType;
   event: DBEventType;
-  eventUsers: Pick<DBUserType, 'id' | 'nickname'>[];
+  eventPlayers: Pick<DBUserType, 'id' | 'nickname'>[];
   eventModerator: Pick<DBUserType, 'id' | 'nickname'>;
   countOfPlayerIdInEvent: number | null;
   eventActiveGames: DBGameType[];
@@ -29,7 +29,7 @@ export function EventCard({
   const canJoinToEvent = canPlayerJoinEvent(
     user,
     event,
-    eventUsers,
+    eventPlayers,
     countOfPlayerIdInEvent,
   );
 
@@ -41,10 +41,15 @@ export function EventCard({
           event={event}
           eventModerator={eventModerator}
         />
-        <EventCardPlayers eventUsers={eventUsers} />
+        <EventCardPlayers eventUsers={eventPlayers} />
         {user.role === DBUserRolesEnum.admin &&
           (eventActiveGames.length === 0 ? (
-            <StartGameForm event={event} user={user} className="mt-6" />
+            <StartGameForm
+              event={event}
+              user={user}
+              countOfPlayerIdInEvent={countOfPlayerIdInEvent}
+              className="mt-6"
+            />
           ) : (
             <BtnToGameBoard
               eventId={event.id}

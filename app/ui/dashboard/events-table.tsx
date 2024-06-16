@@ -56,7 +56,7 @@ export default async function EventsTable() {
                 <UiEventStatus status={event.status} />
               </td>
               <td className="px-6 py-3.5">
-                {event.players_count}/{settings.eventMaxPlayersCount}
+                {event.players_count || 0}/{settings.eventMaxPlayersCount}
               </td>
               <td className="px-6 py-3.5">
                 <UiLink

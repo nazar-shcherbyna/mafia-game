@@ -63,9 +63,9 @@ export async function startEvent(
       VALUES (${event_id}, ${DBGameStatusEnum.started}, 1, ${DBGameTurnEnum.night})
       RETURNING *;
     `;
-    const activeEventPlayers = eventPlayers
-      .filter((player) => player.status === DBEventPlayerStatusEnum.active)
-      .slice(1);
+    const activeEventPlayers = eventPlayers.filter(
+      (player) => player.status === DBEventPlayerStatusEnum.active,
+    );
     const insertedPlayers = await Promise.all(
       activeEventPlayers.map(
         async (player) =>
