@@ -1,6 +1,6 @@
 'use client';
 
-import { DBGamePlayerRoleEnum } from '@/app/@types/db-enums';
+import { DBGamePlayerRoleEnum, DBGameTurnEnum } from '@/app/@types/db-enums';
 import { DBGameType } from '@/app/@types/db-types';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { updatePlayerRole } from '@/app/lib/game-board/update';
@@ -34,6 +34,9 @@ export const SelectRoleForm: React.FC<{
     // @ts-ignore
   >(updatePlayerRoleWithParams, undefined);
 
+  const roundNumber = Number(game.round);
+  const isDisabled =
+    roundNumber > 1 || (roundNumber === 1 && game.turn === DBGameTurnEnum.day);
   return (
     <form action={dispatch}>
       <PropertyWrapper>
@@ -46,6 +49,7 @@ export const SelectRoleForm: React.FC<{
           }
           defaultValue={defaultOptionValue}
           name="role"
+          disabled={isDisabled}
         >
           {Object.entries(DBGamePlayerRoleEnum).map(
             ([role, properties], index) => (
@@ -59,7 +63,7 @@ export const SelectRoleForm: React.FC<{
             ),
           )}
         </UiSelect>
-        <SaveButton disabled={optionsRole === player.game_role} />
+        <SaveButton disabled={isDisabled || optionsRole === player.game_role} />
       </PropertyWrapper>
       {formState?.message && (
         <div
@@ -79,7 +83,11 @@ function SaveButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <UiButton className="bg-green-600" aria-disabled={disabled || pending}>
+    <UiButton
+      className="bg-green-600"
+      disabled={disabled || pending}
+      aria-disabled={disabled || pending}
+    >
       Save
     </UiButton>
   );

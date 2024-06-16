@@ -1,5 +1,6 @@
 'use client';
 
+import { DBGameTurnEnum } from '@/app/@types/db-enums';
 import { DBGameType } from '@/app/@types/db-types';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { updatePlayerPosition } from '@/app/lib/game-board/update';
@@ -33,6 +34,10 @@ export const SelectPlayerPositionForm: React.FC<{
     // @ts-ignore
   >(updatePlayerPositionWithParams, undefined);
 
+  const roundNumber = Number(game.round);
+  const isDisabled =
+    roundNumber > 1 || (roundNumber === 1 && game.turn === DBGameTurnEnum.day);
+
   return (
     <form action={dispatch}>
       <PropertyWrapper>
@@ -48,6 +53,7 @@ export const SelectPlayerPositionForm: React.FC<{
           }}
           defaultValue={playerInPlace?.id}
           name="playerId"
+          disabled={isDisabled}
         >
           <option value={undefined}>Not selected</option>
           {gamePlayers.map((player) => (
@@ -60,7 +66,9 @@ export const SelectPlayerPositionForm: React.FC<{
             </option>
           ))}
         </UiSelect>
-        <SaveButton disabled={!option || playerInPlace?.id === option?.id} />
+        <SaveButton
+          disabled={isDisabled || !option || playerInPlace?.id === option?.id}
+        />
       </PropertyWrapper>
       {formState?.message && (
         <div
@@ -80,7 +88,11 @@ function SaveButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <UiButton className="bg-green-600" aria-disabled={disabled || pending}>
+    <UiButton
+      className="bg-green-600"
+      disabled={disabled || pending}
+      aria-disabled={disabled || pending}
+    >
       Save
     </UiButton>
   );

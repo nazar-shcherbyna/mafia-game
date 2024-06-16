@@ -40,36 +40,52 @@ export function checkIfAllPlayersWithRoleMadeAction(
 ): {
   isAllPlayersWithRoleMadeAction: boolean;
   actionsArray: DBGamePlayerRoleEnum[];
+  isCityVoted: boolean;
 } {
   const actionsArray = [];
   const isMafiaMadeAction = gamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.killed_by_mafia,
   );
-  actionsArray.push(DBGamePlayerRoleEnum.mafia, DBGamePlayerRoleEnum.don);
+  if (isMafiaMadeAction) {
+    actionsArray.push(DBGamePlayerRoleEnum.mafia, DBGamePlayerRoleEnum.don);
+  }
 
   const isDetectiveMadeAction = gamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.checked_by_detective,
   );
-  actionsArray.push(DBGamePlayerRoleEnum.detective);
+  if (isDetectiveMadeAction) {
+    actionsArray.push(DBGamePlayerRoleEnum.detective);
+  }
 
   const isDoctorMadeAction = gamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.hilled_by_doctor,
   );
-  actionsArray.push(DBGamePlayerRoleEnum.doctor);
+  if (isDoctorMadeAction) {
+    actionsArray.push(DBGamePlayerRoleEnum.doctor);
+  }
 
   const isKillerMadeAction = gamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.killed_by_killer,
   );
-  actionsArray.push(DBGamePlayerRoleEnum.killer);
+  if (isKillerMadeAction) {
+    actionsArray.push(DBGamePlayerRoleEnum.killer);
+  }
 
   const isHookerMadeAction = gamePlayers.some(
     (player) => player.player_status === DBGameRoundPlayerStatusEnum.hooked,
   );
-  actionsArray.push(DBGamePlayerRoleEnum.hooker);
+  if (isHookerMadeAction) {
+    actionsArray.push(DBGamePlayerRoleEnum.hooker);
+  }
+
+  const isCityVoted = gamePlayers.some(
+    (player) =>
+      player.player_status === DBGameRoundPlayerStatusEnum.killed_by_day_vote,
+  );
 
   return {
     isAllPlayersWithRoleMadeAction:
@@ -79,6 +95,7 @@ export function checkIfAllPlayersWithRoleMadeAction(
       isKillerMadeAction &&
       isHookerMadeAction,
     actionsArray,
+    isCityVoted,
   };
 }
 

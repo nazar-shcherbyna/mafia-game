@@ -9,9 +9,9 @@ import { unstable_noStore } from 'next/cache';
 
 export type FetchGamePlayerType = Pick<
   DBUserType & DBGamePlayerType,
-  'id' | 'nickname' | 'game_role' | 'position_number' | 'role'
+  'id' | 'nickname' | 'game_role' | 'position_number' | 'role' | 'is_alive'
 > & {
-  player_status: DBGameRoundPlayerStatusEnum;
+  player_status: DBGameRoundPlayerStatusEnum | null;
 };
 
 export const fetchGamePlayers = async (gameId: string, round: number) => {
@@ -19,7 +19,7 @@ export const fetchGamePlayers = async (gameId: string, round: number) => {
 
   try {
     const gamePlayers = await sql<FetchGamePlayerType>`
-      SELECT id, nickname, game_role, position_number, role, player_status FROM users 
+      SELECT id, nickname, game_role, position_number, role, player_status, is_alive FROM users 
       LEFT JOIN games_players ON users.id = games_players.player_id
       LEFT JOIN (
         SELECT player_id, player_status FROM games_rounds

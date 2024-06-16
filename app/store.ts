@@ -13,6 +13,7 @@ export type GameStoreStateType = {
   day: number;
   isNight: boolean;
   selectedSit: number | undefined | null;
+  isOpenRoundReport: boolean;
   registeredPlayers: RegisteredUserGameType[];
   playersDay: PlayerGameDictType[];
   playersNight: PlayerGameDictType[];
@@ -34,6 +35,8 @@ type Actions = {
 
   setRoundReport: (roundReport: RoundReportInterface[]) => void;
   resetState: () => void;
+
+  setIsOpenRoundReport: (state: boolean) => void;
 };
 
 const initialState: GameStoreStateType = {
@@ -41,6 +44,7 @@ const initialState: GameStoreStateType = {
   day: 0,
   isNight: false,
   selectedSit: undefined,
+  isOpenRoundReport: false,
   registeredPlayers: [],
   playersDay: [],
   playersNight: [],
@@ -74,6 +78,8 @@ export const useGameStore = create<GameStoreStateType & Actions>()(
         set({ roundReport: roundReport }),
 
       resetState: () => set({ ...initialState }),
+      setIsOpenRoundReport: (state: boolean) =>
+        set({ isOpenRoundReport: state }),
     }),
     {
       name: 'game-storage',
