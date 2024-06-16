@@ -4,15 +4,15 @@ import {
   GamePlayerStatusKeysType,
   type PlayerGameDictType,
 } from '@/app/dashboard/game/types';
+import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 
 export const findGamePlayerBySitPlace = (
   sitPlace: number,
-  gamePlayers: PlayerGameDictType,
+  gamePlayers: FetchGamePlayerType[],
 ) => {
-  const [playerId, player] = Object.entries(gamePlayers).find(
-    ([id, player]) => player.sitPlace === sitPlace,
-  ) || [undefined, undefined];
-  return { playerId, player };
+  return gamePlayers.find(
+    (player) => Number(player.position_number) === sitPlace,
+  );
 };
 
 export const getAliveRolesObjCount = (

@@ -1,6 +1,6 @@
 import { useGameStore } from '@/app/store';
 import { getActionsObjCount, getNotUsedNightActions } from '../utils';
-import { useGetCurrentDayOrNightStore } from './hooks';
+import { useGetCurrentDayOrNightStore } from './useGetCurrentDayOrNightStore';
 
 export const useDisableNextRound = (): {
   isDisabledDayRound: boolean;

@@ -85,7 +85,7 @@ async function main() {
   const client = await db.connect();
 
   // await createEnums(client);
-  // await createTables(client);
+  await createTables(client);
 
   // await seedTestUsers(client);
   // await seedEvents(client);

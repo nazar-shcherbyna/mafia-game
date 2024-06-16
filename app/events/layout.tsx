@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="relative flex w-full justify-center p-5">
       <Link
         href="/dashboard"
-        className="absolute left-10 flex items-center text-xl font-semibold text-[#CFD3EC]"
+        className="absolute -top-5 left-10 flex items-center text-xl font-semibold text-[#CFD3EC]"
       >
         <ArrowLeftIcon
           width={24}

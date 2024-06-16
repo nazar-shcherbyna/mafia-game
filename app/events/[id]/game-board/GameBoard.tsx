@@ -1,17 +1,18 @@
 'use client';
 
-import { DBGamePlayerType, DBUserType } from '@/app/@types/db-types';
+import { DBGameType } from '@/app/@types/db-types';
+import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
+import { gameBoardValidator } from '@/app/lib/game-board/validators';
 import { useGameStore } from '@/app/store';
 import { UiButton } from '@/app/ui/atoms/button';
-import { useDisableNextRound } from './hooks/useDisableNextRound';
 import { Board } from './ui/Board';
 
 export const GameBoard = ({
-  gameId,
-  players,
+  game,
+  gamePlayers,
 }: {
-  gameId: string;
-  players: Pick<DBUserType & DBGamePlayerType, 'id' | 'nickname' | 'role'>[];
+  game: DBGameType;
+  gamePlayers: FetchGamePlayerType[];
 }) => {
   const round = useGameStore((state) => state.day);
   const isNight = useGameStore((state) => state.isNight);
@@ -25,10 +26,11 @@ export const GameBoard = ({
     resetState();
   };
 
-  const { isDisabledDayRound, isDisabledNightRound } = useDisableNextRound();
+  const nextRoundValidator = gameBoardValidator(game.round, gamePlayers);
 
   return (
     <div className="relative flex w-full grow-0 flex-col items-center py-20">
+      <h3 className="absolute -top-4">{nextRoundValidator.message}</h3>
       <div className="absolute top-3 flex w-full items-center justify-between">
         <UiButton
           // onClick={previousRoundHandler}
@@ -38,22 +40,18 @@ export const GameBoard = ({
           Previous Round
         </UiButton>
         <div>
-          {isNight ? 'Night' : 'Day'}: {round}
+          {game.turn}: {game.round}
         </div>
         <UiButton
-          disabled={
-            round !== 0 && isNight ? isDisabledNightRound : isDisabledDayRound
-          }
-          aria-disabled={
-            round !== 0 && isNight ? isDisabledNightRound : isDisabledDayRound
-          }
+          disabled={nextRoundValidator.disableNextRound}
+          aria-disabled={nextRoundValidator.disableNextRound}
           // onClick={nextRoundHandler}
         >
           Next Round
         </UiButton>
       </div>
 
-      <Board players={players} />
+      <Board game={game} gamePlayers={gamePlayers} />
 
       <div className="absolute bottom-3 flex w-full items-center justify-between">
         <UiButton onClick={restartHandler}>Restart</UiButton>

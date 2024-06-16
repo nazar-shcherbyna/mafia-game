@@ -38,7 +38,7 @@ export interface DBGameType {
   event_id: string;
   started_at: string;
   finished_at: string;
-  round: number;
+  round: string;
   status: DBGameStatusEnum;
   turn: DBGameTurnEnum;
   vinner: DBGameVinnerEnum;
@@ -47,12 +47,14 @@ export interface DBGameType {
 export interface DBGamePlayerType {
   game_id: string;
   player_id: string;
-  role: DBGamePlayerRoleEnum;
+  player_name: string;
+  game_role: DBGamePlayerRoleEnum;
+  position_number: string;
 }
 
 export interface DBGameRoundType {
   game_id: string;
-  game_round: number;
+  game_round: string;
   player_id: string;
   player_status: DBGameRoundPlayerStatusEnum;
 }

@@ -100,7 +100,8 @@ async function createGamesPlayersTable(client) {
       CREATE TABLE IF NOT EXISTS games_players (
         game_id UUID NOT NULL,
         player_id UUID NOT NULL,
-        role game_player_role_enum,
+        game_role game_player_role_enum,
+        position_number INT,
         FOREIGN KEY (game_id) REFERENCES games(id),
         FOREIGN KEY (player_id) REFERENCES users(id)
       );
@@ -138,11 +139,10 @@ async function createGamesRoundsTable(client) {
 
 async function createTables(client) {
     try {
-      await createUsersTable(client);
-      await createEventsTable(client);
+      // await createUsersTable(client);
+      // await createEventsTable(client);
+      // await createEventsPlayersTable(client);
       await createGamesTable(client);
-      await createEventsPlayersTable(client);
-      await createEventsGamesTable(client);
       await createGamesPlayersTable(client);
       await createGamesRoundsTable(client);
     } catch (error) {
