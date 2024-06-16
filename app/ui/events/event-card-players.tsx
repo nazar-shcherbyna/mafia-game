@@ -1,9 +1,9 @@
-import { UserType } from '@/app/@types/users';
+import { DBUserType } from '@/app/@types/db-types';
 import Image from 'next/image';
 import { UiBox } from '../atoms/box';
 
 export const EventCardPlayers: React.FC<{
-  eventUsers: Pick<UserType, 'id' | 'nickname'>[];
+  eventUsers: Pick<DBUserType, 'id' | 'nickname'>[];
 }> = ({ eventUsers }) => {
   return (
     <>

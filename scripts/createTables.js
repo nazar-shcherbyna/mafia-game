@@ -79,6 +79,7 @@ async function createGamesTable(client) {
           round INT NOT NULL DEFAULT 1,
           status game_status_enum NOT NULL DEFAULT 'started',
           turn game_turn_enum NOT NULL DEFAULT 'night',
+          vinner game_vinner_enum,
           FOREIGN KEY (event_id) REFERENCES events(id)
         );
     `;
@@ -91,27 +92,6 @@ async function createGamesTable(client) {
     }
 }
   
-async function createEventsGamesTable(client) {
-    try {
-      await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  
-      await client.sql`
-        CREATE TABLE IF NOT EXISTS events_games (
-          event_id UUID NOT NULL,
-          game_id UUID NOT NULL,
-          FOREIGN KEY (event_id) REFERENCES events(id),
-          FOREIGN KEY (game_id) REFERENCES games(id)
-        );
-    `;
-  
-      console.log(`Created "EventsGames" table`);
-  
-    } catch (error) {
-      console.error('Error creating table EventsGames:', error);
-      throw error;
-    }
-}
-  
 async function createGamesPlayersTable(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -120,8 +100,8 @@ async function createGamesPlayersTable(client) {
       CREATE TABLE IF NOT EXISTS games_players (
         game_id UUID NOT NULL,
         player_id UUID NOT NULL,
-        status game_player_status_enum NOT NULL DEFAULT 'alive',
-        role game_player_role_enum,
+        game_role game_player_role_enum,
+        position_number INT,
         FOREIGN KEY (game_id) REFERENCES games(id),
         FOREIGN KEY (player_id) REFERENCES users(id)
       );
@@ -134,14 +114,37 @@ async function createGamesPlayersTable(client) {
   }
 }
 
+async function createGamesRoundsTable(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    await client.sql`
+      CREATE TABLE IF NOT EXISTS games_rounds (
+        game_id UUID NOT NULL,
+        game_round INT NOT NULL,
+        player_id UUID NOT NULL,
+        player_status game_round_player_status_enum NOT NULL,
+        FOREIGN KEY (game_id) REFERENCES games(id),
+        FOREIGN KEY (player_id) REFERENCES users(id)
+      );
+  `;
+
+    console.log(`Created "GamesRoundsState" table`);
+
+  } catch (error) {
+    console.error('Error creating table GamesRoundsState:', error);
+    throw error;
+  }
+}
+
 async function createTables(client) {
     try {
-      await createUsersTable(client);
-      await createEventsTable(client);
+      // await createUsersTable(client);
+      // await createEventsTable(client);
+      // await createEventsPlayersTable(client);
       await createGamesTable(client);
-      await createEventsPlayersTable(client);
-      await createEventsGamesTable(client);
       await createGamesPlayersTable(client);
+      await createGamesRoundsTable(client);
     } catch (error) {
       console.error('Error creating tables:', error);
       throw error;

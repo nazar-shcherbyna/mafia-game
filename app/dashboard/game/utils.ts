@@ -4,15 +4,15 @@ import {
   GamePlayerStatusKeysType,
   type PlayerGameDictType,
 } from '@/app/dashboard/game/types';
+import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 
 export const findGamePlayerBySitPlace = (
   sitPlace: number,
-  gamePlayers: PlayerGameDictType,
+  gamePlayers: FetchGamePlayerType[],
 ) => {
-  const [playerId, player] = Object.entries(gamePlayers).find(
-    ([id, player]) => player.sitPlace === sitPlace,
-  ) || [undefined, undefined];
-  return { playerId, player };
+  return gamePlayers.find(
+    (player) => Number(player.position_number) === sitPlace,
+  );
 };
 
 export const getAliveRolesObjCount = (
@@ -20,17 +20,19 @@ export const getAliveRolesObjCount = (
 ): Record<GamePlayerRolesKeysType, number> | null => {
   if (!gamePlayers) return null;
 
-  return Object.values(gamePlayers)
-    .filter((player) => !GAME_PLAYER_STATUS[player.status].isDeadly)
-    .map((player) => player.role)
-    .reduce(
-      (acc, role) => {
-        if (!acc[role]) acc[role] = 1;
-        else acc[role] = acc[role] + 1;
-        return acc;
-      },
-      {} as Record<GamePlayerRolesKeysType, number>,
-    );
+  return (
+    Object.values(gamePlayers)
+      // .filter((player) => !GAME_PLAYER_STATUS[player.status].isDeadly)
+      .map((player) => player.role)
+      .reduce(
+        (acc, role) => {
+          if (!acc[role]) acc[role] = 1;
+          else acc[role] = acc[role] + 1;
+          return acc;
+        },
+        {} as Record<GamePlayerRolesKeysType, number>,
+      )
+  );
 };
 
 export const getActionsObjCount = (
@@ -55,27 +57,6 @@ export const getActionsObjCount = (
 export const checkWinner = (gamePlayers: PlayerGameDictType) => {
   const rolesDict = getAliveRolesObjCount(gamePlayers);
   if (rolesDict === null || !Object.values(rolesDict).length) return;
-
-  const alive = Object.values(rolesDict).reduce((acc, item) => {
-    acc += item;
-    return acc;
-  }, 0);
-
-  if (
-    (rolesDict.MAFIA ||
-      0 + rolesDict.GODFATHER ||
-      0 + rolesDict.HOOKER ||
-      0) === 0
-  )
-    window.alert('CIVILIAN WIN');
-  if (
-    (rolesDict.CIVILIAN ||
-      0 + rolesDict.DETECTIVE ||
-      0 + rolesDict.DOCTOR ||
-      0) === 0
-  )
-    window.alert('MAFIA WIN');
-  if (alive <= 2 && rolesDict.KILLER) window.alert('KILLER WIN'); // Wins when among final 2 alive
 };
 
 export const getNotUsedNightActions = (gamePlayers: PlayerGameDictType) => {

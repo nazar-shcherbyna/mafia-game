@@ -1,22 +1,20 @@
-import { GAME_PLAYER_STATUS, GAME_ROLES } from '@/app/dashboard/game/constans';
+import { DBGamePlayerRoleEnum } from '@/app/@types/db-enums';
+import { DBGamePlayerType, DBUserType } from '@/app/@types/db-types';
 import { useGetCurrentDayOrNightStore } from '@/app/dashboard/game/hooks/hooks';
-import { RoundReport } from '@/app/dashboard/game/ui/RoundReport';
-import { SitEditor } from '@/app/dashboard/game/ui/SitEditor';
-import { findGamePlayerBySitPlace } from '@/app/dashboard/game/utils';
-import { useGameStore } from '@/app/store';
-import { GamePlayerRolesKeysType } from '../types';
 
-export const Board = () => {
-  const selectedSit = useGameStore((state) => state.selectedSit);
-  const roundReport = useGameStore((state) => state.roundReport);
+export const Board: React.FC<{
+  players: Pick<DBUserType & DBGamePlayerType, 'id' | 'nickname' | 'role'>[];
+}> = ({ players }) => {
+  // const selectedSit = useGameStore((state) => state.selectedSit);
+  // const roundReport = useGameStore((state) => state.roundReport);
 
   return (
     <div className="relative h-[150px] w-[300px] rounded-[60px] border-[20px] border-white-400 sm:h-[250px] sm:w-[500px] md:h-[370px] md:w-[640px] lg:h-[450px] lg:w-[900px]">
       <div className="absolute left-1/2 top-1/2 h-2/3 w-max translate-x-[-50%] translate-y-[-50%] overflow-y-auto">
-        {selectedSit && <SitEditor />}
-        {!selectedSit && !!roundReport.length && <RoundReport />}
+        {/* {selectedSit && <SitEditor />}
+        {!selectedSit && !!roundReport.length && <RoundReport />} */}
       </div>
-      <PlayersRow>
+      {/* <PlayersRow>
         {Array.from({ length: 5 }, (_, index) => (
           <PlayerDotWrapper key={index} index={1 + index}></PlayerDotWrapper>
         ))}
@@ -38,7 +36,7 @@ export const Board = () => {
         {Array.from({ length: 3 }, (_, index) => (
           <PlayerDotWrapper key={index} index={14 + index}></PlayerDotWrapper>
         ))}
-      </PlayersColumn>
+      </PlayersColumn> */}
     </div>
   );
 };
@@ -80,28 +78,28 @@ const PlayersColumn = ({
 );
 
 const PlayerDotWrapper = ({ index }: { index: number }) => {
-  const selectedSit = useGameStore((state) => state.selectedSit);
-  const setSelectedSit = useGameStore((state) => state.setSelectedSit);
+  // const selectedSit = useGameStore((state) => state.selectedSit);
+  // const setSelectedSit = useGameStore((state) => state.setSelectedSit);
 
-  const day = useGameStore((state) => state.day);
+  // const day = useGameStore((state) => state.day);
   const { playersStore } = useGetCurrentDayOrNightStore();
-  const gamePlayers = playersStore[day] || {};
-  const { player } = findGamePlayerBySitPlace(index, gamePlayers);
+  // const gamePlayers = playersStore[day] || {};
+  // const { player } = findGamePlayerBySitPlace(index, gamePlayers);
 
-  return (
-    <PlayerDot
-      index={index}
-      bgColor={player?.role ? GAME_ROLES[player.role].color : 'bg-white-400'}
-      opacity={
-        player?.status
-          ? GAME_PLAYER_STATUS[player.status].opacity
-          : 'opacity-100'
-      }
-      onClick={() => setSelectedSit(index)}
-      selected={selectedSit === index}
-      role={player?.role}
-    />
-  );
+  // return (
+  //   <PlayerDot
+  //     index={index}
+  //     bgColor={player?.role ? GAME_ROLES[player.role].color : 'bg-white-400'}
+  //     opacity={
+  //       player?.status
+  //         ? GAME_PLAYER_STATUS[player.status].opacity
+  //         : 'opacity-100'
+  //     }
+  //     onClick={() => setSelectedSit(index)}
+  //     selected={selectedSit === index}
+  //     role={player?.role}
+  //   />
+  // );
 };
 
 const PlayerDot = ({
@@ -117,7 +115,7 @@ const PlayerDot = ({
   selected: boolean;
   bgColor: string;
   opacity: string;
-  role?: GamePlayerRolesKeysType;
+  role?: DBGamePlayerRoleEnum;
 }) => (
   <button
     onClick={onClick}

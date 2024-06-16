@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { UserType } from '../@types/users';
+import { DBUserType } from '../@types/db-types';
 import {
   CustomerField,
   CustomersTable,
@@ -228,7 +228,7 @@ export async function getUser(email: string) {
 
 export async function fetchUser(id: string) {
   try {
-    const user = await sql<UserType>`SELECT * FROM users WHERE id=${id}`;
+    const user = await sql<DBUserType>`SELECT * FROM users WHERE id=${id}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);

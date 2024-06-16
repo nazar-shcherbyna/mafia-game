@@ -101,9 +101,9 @@ async function createGamePlayerStatusEnum(client) {
     DO $$
       BEGIN
         IF 
-          NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'game_player_status_enum') 
+          NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'game_round_player_status_enum') 
         THEN 
-          CREATE TYPE game_player_status_enum AS ENUM (
+          CREATE TYPE game_round_player_status_enum AS ENUM (
             'alive',
             'checked_by_detective',
             'killed_by_detective',
@@ -117,17 +117,33 @@ async function createGamePlayerStatusEnum(client) {
       END $$;
     `;
 
-    console.log('Created "game_player_status_enum" type');
+    console.log('Created "game_round_player_status_enum" type');
+}
+
+async function createGameVinnerEnum(client) {
+    await client.sql`
+    DO $$
+      BEGIN
+        IF 
+          NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'game_vinner_enum') 
+        THEN 
+          CREATE TYPE game_vinner_enum AS ENUM ('mafia', 'civilians');
+        END IF;
+      END $$;
+    `;
+
+    console.log('Created "game_vinner_enum" type');
 }
 
 async function createEnums(client) {
     await createUserRoleEnum(client);
     await createEventStatusEnum(client);
+    await createEventPlayerStatusEnum(client);
     await createGameStatusEnum(client);
     await createGameTurnEnum(client);
-    await createEventPlayerStatusEnum(client);
     await createGamePlayerRoleEnum(client);
     await createGamePlayerStatusEnum(client);
+    await createGameVinnerEnum(client);
 }
 
 module.exports = {

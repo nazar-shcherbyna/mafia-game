@@ -39,7 +39,6 @@ export async function createEvent(
       date: formData.get('date'),
       location: formData.get('location'),
     });
-    crypto.randomUUID();
 
     if (validatedFields.success) {
       const { title, date, location } = validatedFields.data;
@@ -51,8 +50,6 @@ export async function createEvent(
             VALUES (${eventId}, ${title}, ${formattedDate}, ${location}, ${adminId})
         `;
 
-      // TODO find out do I need to revalidatePath or not
-      // revalidatePath('/events/${eventId}');
       redirect(`/events/${eventId}`);
     } else {
       return {

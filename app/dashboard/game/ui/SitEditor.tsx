@@ -1,19 +1,5 @@
-import { GAME_PLAYER_STATUS, GAME_ROLES } from '@/app/dashboard/game/constans';
 import { useGetCurrentDayOrNightStore } from '@/app/dashboard/game/hooks/hooks';
-import {
-  GamePlayerRolesKeysType,
-  type GamePlayerStatusKeysType,
-} from '@/app/dashboard/game/types';
-import {
-  findGamePlayerBySitPlace,
-  getActionsObjCount,
-  getAliveRolesObjCount,
-} from '@/app/dashboard/game/utils';
 import { useGameStore } from '@/app/store';
-import { UiButton } from '@/app/ui/atoms/button';
-import { UiCheckbox } from '@/app/ui/atoms/checkbox';
-import { UiSelect } from '@/app/ui/atoms/select';
-import { useState } from 'react';
 
 export const SitEditor = () => {
   const selectedSit = useGameStore((state) => state.selectedSit)!;
@@ -26,58 +12,58 @@ export const SitEditor = () => {
   const { playersStore, setPlayersStore } = useGetCurrentDayOrNightStore();
   const gamePlayers = playersStore[day];
 
-  const { player: currentPlayer, playerId: currentPlayerId } =
-    findGamePlayerBySitPlace(selectedSit, gamePlayers || {});
-  const [playerId, setPlayerId] = useState<string>(currentPlayerId || '');
-  const [role, setRole] = useState<GamePlayerRolesKeysType>(
-    currentPlayer?.role || 'CIVILIAN',
-  );
-  const [status, setStatus] = useState<GamePlayerStatusKeysType>(
-    currentPlayer?.status || 'ALIVE',
-  );
+  // const { player: currentPlayer, playerId: currentPlayerId } =
+  //   findGamePlayerBySitPlace(selectedSit, gamePlayers || {});
+  // const [playerId, setPlayerId] = useState<string>(currentPlayerId || '');
+  // const [role, setRole] = useState<GamePlayerRolesKeysType>(
+  //   currentPlayer?.role || DBGamePlayerRoleEnum.civilian,
+  // );
+  // const [status, setStatus] = useState<GamePlayerStatusKeysType>(
+  //   currentPlayer?.status || DBGameRoundPlayerStatusEnum.alive,
+  // );
 
-  const [actions, setActions] = useState<GamePlayerStatusKeysType[]>(
-    gamePlayers?.[playerId]?.actions || [],
-  );
+  // const [actions, setActions] = useState<GamePlayerStatusKeysType[]>(
+  //   gamePlayers?.[playerId]?.actions || [],
+  // );
 
-  const [isPersonalDataEditable, setIsPersonalDataEditable] = useState<boolean>(
-    day === 0,
-  );
+  // const [isPersonalDataEditable, setIsPersonalDataEditable] = useState<boolean>(
+  //   day === 0,
+  // );
 
-  const currentRolesObjCount = getAliveRolesObjCount(gamePlayers);
-  const currentActionsObjCount = getActionsObjCount(gamePlayers || []);
+  // const currentRolesObjCount = getAliveRolesObjCount(gamePlayers);
+  // const currentActionsObjCount = getActionsObjCount(gamePlayers || []);
 
-  const saveHandler = () => {
-    const playersStore_ = [...playersStore];
-    playersStore[day][playerId] = {
-      sitPlace: selectedSit!,
-      role,
-      status,
-      actions,
-    };
-    setPlayersStore(playersStore_);
+  // const saveHandler = () => {
+  //   const playersStore_ = [...playersStore];
+  //   playersStore[day][playerId] = {
+  //     sitPlace: selectedSit!,
+  //     role,
+  //     status,
+  //     actions,
+  //   };
+  //   setPlayersStore(playersStore_);
 
-    setSelectedSit(undefined);
-  };
+  //   setSelectedSit(undefined);
+  // };
 
-  const actionChangeHandler = (
-    index: number,
-    value: GamePlayerStatusKeysType,
-  ) => {
-    setActions((actions) => {
-      const actions_ = [...actions];
-      actions_[index] = value;
-      return actions_;
-    });
-  };
+  // const actionChangeHandler = (
+  //   index: number,
+  //   value: GamePlayerStatusKeysType,
+  // ) => {
+  //   setActions((actions) => {
+  //     const actions_ = [...actions];
+  //     actions_[index] = value;
+  //     return actions_;
+  //   });
+  // };
 
-  const deleteActionHandler = (index: number) => {
-    setActions((actions) => {
-      const actions_ = [...actions];
-      actions_.splice(index, 1);
-      return actions_;
-    });
-  };
+  // const deleteActionHandler = (index: number) => {
+  //   setActions((actions) => {
+  //     const actions_ = [...actions];
+  //     actions_.splice(index, 1);
+  //     return actions_;
+  //   });
+  // };
 
   return (
     <div className="">
@@ -85,7 +71,7 @@ export const SitEditor = () => {
 
       <div className="my-5 flex flex-row gap-4">
         <div className="flex flex-col gap-2">
-          <PropertyWrapper>
+          {/* <PropertyWrapper>
             Player name:{' '}
             <UiSelect
               className=""
@@ -108,9 +94,8 @@ export const SitEditor = () => {
                 </option>
               ))}
             </UiSelect>
-          </PropertyWrapper>
-
-          <PropertyWrapper>
+          </PropertyWrapper> */}
+          {/* <PropertyWrapper>
             Role:
             <UiSelect
               className=""
@@ -138,9 +123,9 @@ export const SitEditor = () => {
                 </option>
               ))}
             </UiSelect>
-          </PropertyWrapper>
+          </PropertyWrapper> */}
 
-          <PropertyWrapper>
+          {/* <PropertyWrapper>
             Status:
             <UiSelect
               disabled={!isPersonalDataEditable}
@@ -158,21 +143,21 @@ export const SitEditor = () => {
                 ),
               )}
             </UiSelect>
-          </PropertyWrapper>
+          </PropertyWrapper> */}
 
-          <PropertyWrapper>
+          {/* <PropertyWrapper>
             Edit disabled:{' '}
             <UiCheckbox
               className=""
               onChange={() => setIsPersonalDataEditable((s) => !s)}
               defaultChecked={!isPersonalDataEditable}
             ></UiCheckbox>
-          </PropertyWrapper>
+          </PropertyWrapper> */}
         </div>
 
         <div className="">
           Actions:
-          {actions.map((action, index) => (
+          {/* {actions.map((action, index) => (
             <PropertyWrapper key={index}>
               Action {index + 1}:
               <UiSelect
@@ -216,21 +201,23 @@ export const SitEditor = () => {
               </UiSelect>
               <UiButton onClick={() => deleteActionHandler(index)}>X</UiButton>
             </PropertyWrapper>
-          ))}
+          ))} */}
         </div>
       </div>
 
-      <PropertyWrapper>
+      {/*   <PropertyWrapper>
         <UiButton onClick={() => setSelectedSit(undefined)}>Close</UiButton>
         <UiButton
-          onClick={() => setActions((ac) => [...ac, 'ALIVE'])}
+          onClick={() =>
+            setActions((ac) => [...ac, DBGameRoundPlayerStatusEnum.alive])
+          }
           disabled={!day || !playerId}
           aria-disabled={!day || !playerId}
         >
           Add Action
         </UiButton>
         <UiButton onClick={saveHandler}>Save</UiButton>
-      </PropertyWrapper>
+      </PropertyWrapper> */}
     </div>
   );
 };
