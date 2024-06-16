@@ -103,4 +103,4 @@ export const GAME_PLAYER_STATUS: Record<
     order: 20,
     isDeadly: false,
   },
-} as const;
+};

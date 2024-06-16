@@ -20,17 +20,19 @@ export const getAliveRolesObjCount = (
 ): Record<GamePlayerRolesKeysType, number> | null => {
   if (!gamePlayers) return null;
 
-  return Object.values(gamePlayers)
-    .filter((player) => !GAME_PLAYER_STATUS[player.status].isDeadly)
-    .map((player) => player.role)
-    .reduce(
-      (acc, role) => {
-        if (!acc[role]) acc[role] = 1;
-        else acc[role] = acc[role] + 1;
-        return acc;
-      },
-      {} as Record<GamePlayerRolesKeysType, number>,
-    );
+  return (
+    Object.values(gamePlayers)
+      // .filter((player) => !GAME_PLAYER_STATUS[player.status].isDeadly)
+      .map((player) => player.role)
+      .reduce(
+        (acc, role) => {
+          if (!acc[role]) acc[role] = 1;
+          else acc[role] = acc[role] + 1;
+          return acc;
+        },
+        {} as Record<GamePlayerRolesKeysType, number>,
+      )
+  );
 };
 
 export const getActionsObjCount = (
