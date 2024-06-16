@@ -1,16 +1,20 @@
 import { DBGameType } from '@/app/@types/db-types';
 import { findGamePlayerBySitPlace } from '@/app/dashboard/game/utils';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
+import { gameBoardValidator } from '@/app/lib/game-board/validators';
 import { SelectPlayerPositionForm } from '@/app/ui/game-board/select-player-position-form';
+import { SelectRoleForm } from '@/app/ui/game-board/select-role-form';
 
 export async function SitEditor({
   gamePlayers,
   game,
   position,
+  gameBoardValidation,
 }: {
   gamePlayers: FetchGamePlayerType[];
   game: DBGameType;
   position: number;
+  gameBoardValidation: ReturnType<typeof gameBoardValidator>;
 }) {
   const playerInPlace = findGamePlayerBySitPlace(position, gamePlayers);
 
@@ -27,9 +31,12 @@ export async function SitEditor({
             position={position}
           />
 
-          {/* {player && <SelectRoleForm player={player} game={game} />}
+          {gameBoardValidation.passedConditions.includes('potions') &&
+            playerInPlace && (
+              <SelectRoleForm player={playerInPlace} game={game} />
+            )}
 
-          {player && (
+          {/* {player && (
             <SelectRoundPlayerStatusForm
               playerRoundStatus={DBGameRoundPlayerStatusEnum.alive}
               game={game}

@@ -7,8 +7,8 @@ export const MainLogo: React.FC<{
   return (
     <Image
       src="/main-logo.png"
-      width={160}
-      height={106}
+      width={90}
+      height={60}
       className={className}
       alt="Main Logo of the project"
     />
