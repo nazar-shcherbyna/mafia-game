@@ -48,10 +48,29 @@ export async function updateRoundPlayerStatus(
     // const playerStatusInDB = await sql<DBGamesRoundsType>`
     const status = formData.get('status') as DBGamePlayerRoleEnum;
 
-    await sql`
+    const hasPlayerStatusInTheRound = await sql`
+      SELECT player_status
+      FROM games_rounds
+      WHERE game_id = ${gameId} AND game_round = ${Number(
+        gameRound,
+      )} AND player_id = ${playerId}
+      LIMIT 1;
+    `;
+
+    if (hasPlayerStatusInTheRound.rows.length > 0) {
+      await sql`
+        UPDATE games_rounds
+        SET player_status = ${status}
+        WHERE game_id = ${gameId} AND game_round = ${Number(
+          gameRound,
+        )} AND player_id = ${playerId};
+      `;
+    } else {
+      await sql`
       INSERT INTO games_rounds (game_id, game_round, player_id, player_status)
       VALUES (${gameId}, ${Number(gameRound)}, ${playerId}, ${status})
     `;
+    }
 
     revalidatePath(`/events/${gameId}/game-board`);
   } catch (error) {

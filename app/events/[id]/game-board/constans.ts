@@ -14,7 +14,7 @@ import {
 export const GAME_ROLES_DATA: Record<
   DBGamePlayerRoleEnum,
   {
-    color: string;
+    classes: string;
     max: number;
     icon: React.FC<{
       className?: string;
@@ -23,46 +23,46 @@ export const GAME_ROLES_DATA: Record<
   }
 > = {
   [DBGamePlayerRoleEnum.civilian]: {
-    color: '#28C76F',
+    classes: 'bg-[#28C76F]',
     max: Infinity,
     icon: HomeIcon,
     iconClasses: 'h-10 w-10 text-[#FFFFFF]',
   },
   [DBGamePlayerRoleEnum.detective]: {
-    color: '#047BFB',
+    classes: 'bg-[#047BFB]',
     max: 1,
     icon: StarIcon,
     iconClasses: 'h-10 w-10 text-[#FFFFFF]',
   },
   [DBGamePlayerRoleEnum.doctor]: {
-    color: '#F5F5F5',
+    classes: 'bg-[#F5F5F5]',
     max: 1,
     icon: PlusIcon,
     iconClasses: 'h-10 w-10 text-[#EA5455]',
   },
   [DBGamePlayerRoleEnum.mafia]: {
-    color: '#43454F',
+    classes: 'bg-[#43454F]',
     max: Infinity,
     icon: BanknotesIcon,
     iconClasses: 'h-10 w-10 text-[#FFFFFF]',
   },
   [DBGamePlayerRoleEnum.don]: {
-    color: '#43454F',
+    classes: 'bg-[#43454F]',
     max: 1,
     icon: BanknotesIcon,
     iconClasses: 'h-10 w-10 text-[#FFFFFF]',
   },
   [DBGamePlayerRoleEnum.hooker]: {
-    color: '#E83E8C',
+    classes: 'bg-[#E83E8C]',
     max: 1,
     icon: HeartIcon,
     iconClasses: 'h-10 w-10 text-[#FFFFFF]',
   }, //Lola
   [DBGamePlayerRoleEnum.killer]: {
-    color: '#C43234',
+    classes: 'bg-[#C43234]',
     max: 1,
     icon: EyeDropperIcon,
-    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+    iconClasses: 'h-10 w-10 text-[#FFFFFF] rotate-180',
   }, //Maniak
 } as const;
 

@@ -1,6 +1,9 @@
 'use client';
 
-import { DBGameRoundPlayerStatusEnum } from '@/app/@types/db-enums';
+import {
+  DBGameRoundPlayerStatusEnum,
+  DBGameTurnEnum,
+} from '@/app/@types/db-enums';
 import { DBGameType } from '@/app/@types/db-types';
 import { GamePlayerStatusKeysType } from '@/app/dashboard/game/types';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
@@ -50,7 +53,16 @@ export const SelectRoundPlayerStatusForm: React.FC<{
         >
           {Object.entries(DBGameRoundPlayerStatusEnum).map(
             ([status, properties], index) => (
-              <option key={status} value={status}>
+              <option
+                key={status}
+                value={status}
+                disabled={
+                  (game.turn === DBGameTurnEnum.night &&
+                    status ===
+                      DBGameRoundPlayerStatusEnum.killed_by_day_vote) ||
+                  player.player_status === status
+                }
+              >
                 {status}
               </option>
             ),
@@ -76,7 +88,11 @@ function SaveButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <UiButton className="bg-green-600" aria-disabled={disabled || pending}>
+    <UiButton
+      className="bg-green-600"
+      aria-disabled={disabled || pending}
+      type="submit"
+    >
       Save
     </UiButton>
   );

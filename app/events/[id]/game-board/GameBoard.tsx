@@ -3,8 +3,7 @@
 import { DBGameType } from '@/app/@types/db-types';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { gameBoardValidator } from '@/app/lib/game-board/validators';
-import { useGameStore } from '@/app/store';
-import { UiButton } from '@/app/ui/atoms/button';
+import { NextRoundForm } from '@/app/ui/game-board/next-round-form';
 import { Board } from './ui/Board';
 
 export const GameBoard = ({
@@ -14,41 +13,22 @@ export const GameBoard = ({
   game: DBGameType;
   gamePlayers: FetchGamePlayerType[];
 }) => {
-  const round = useGameStore((state) => state.day);
-  const isNight = useGameStore((state) => state.isNight);
-  const resetState = useGameStore((state) => state.resetState);
-
-  // const { nextRoundHandler, previousRoundHandler } = useChangeRoundHook();
-  // useStartGame(gameId, registeredPlayers);
-
-  const restartHandler = () => {
-    if (!window.confirm('Do you sure? It will destroy this game')) return;
-    resetState();
-  };
-
-  const gameBoardValidation = gameBoardValidator(game.round, gamePlayers);
+  const gameBoardValidation = gameBoardValidator(game, gamePlayers);
 
   return (
     <div className="relative flex w-full grow-0 flex-col items-center px-24 py-32">
       <h3 className="absolute -top-2">{gameBoardValidation.message}</h3>
-      <div className="absolute top-6 flex w-full items-center justify-between">
-        <UiButton
-          // onClick={previousRoundHandler}
-          aria-disabled={!round && !isNight}
-          disabled={!round && !isNight}
-        >
-          Previous Round
-        </UiButton>
+      <div className="absolute left-1/2 top-6 -translate-x-1/2">
         <div>
           {game.turn}: {game.round}
         </div>
-        <UiButton
-          disabled={gameBoardValidation.disableNextRound}
-          aria-disabled={gameBoardValidation.disableNextRound}
-          // onClick={nextRoundHandler}
-        >
-          Next Round
-        </UiButton>
+      </div>
+      <div className="absolute right-0 top-6 flex">
+        <NextRoundForm
+          game={game}
+          gamePlayers={gamePlayers}
+          gameBoardValidation={gameBoardValidation}
+        />
       </div>
 
       <Board

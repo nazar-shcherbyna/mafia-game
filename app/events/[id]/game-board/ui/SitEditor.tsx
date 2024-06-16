@@ -4,6 +4,7 @@ import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { gameBoardValidator } from '@/app/lib/game-board/validators';
 import { SelectPlayerPositionForm } from '@/app/ui/game-board/select-player-position-form';
 import { SelectRoleForm } from '@/app/ui/game-board/select-role-form';
+import { SelectRoundPlayerStatusForm } from '@/app/ui/game-board/select-round-player-status-form';
 
 export async function SitEditor({
   gamePlayers,
@@ -31,18 +32,20 @@ export async function SitEditor({
             position={position}
           />
 
-          {gameBoardValidation.passedConditions.includes('potions') &&
+          {gameBoardValidation.passedConditions.includes('positions') &&
             playerInPlace && (
               <SelectRoleForm player={playerInPlace} game={game} />
             )}
 
-          {/* {player && (
-            <SelectRoundPlayerStatusForm
-              playerRoundStatus={DBGameRoundPlayerStatusEnum.alive}
-              game={game}
-              player={player}
-            />
-          )} */}
+          {gameBoardValidation.passedConditions.includes('roles') &&
+            gameBoardValidation.passedConditions.includes('positions') &&
+            playerInPlace && (
+              <SelectRoundPlayerStatusForm
+                playerRoundStatus={playerInPlace.player_status}
+                game={game}
+                player={playerInPlace}
+              />
+            )}
         </div>
       </div>
     </>
