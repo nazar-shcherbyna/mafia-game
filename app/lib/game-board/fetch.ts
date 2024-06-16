@@ -1,3 +1,4 @@
+import { DBGameRoundPlayerStatusEnum } from '@/app/@types/db-enums';
 import {
   DBGamePlayerType,
   DBGameRoundType,
@@ -9,15 +10,21 @@ import { unstable_noStore } from 'next/cache';
 export type FetchGamePlayerType = Pick<
   DBUserType & DBGamePlayerType,
   'id' | 'nickname' | 'game_role' | 'position_number' | 'role'
->;
+> & {
+  player_status: DBGameRoundPlayerStatusEnum;
+};
 
-export const fetchGamePlayers = async (gameId: string) => {
+export const fetchGamePlayers = async (gameId: string, round: number) => {
   unstable_noStore();
 
   try {
     const gamePlayers = await sql<FetchGamePlayerType>`
-      SELECT id, nickname, game_role, position_number, role FROM users 
+      SELECT id, nickname, game_role, position_number, role, player_status FROM users 
       LEFT JOIN games_players ON users.id = games_players.player_id
+      LEFT JOIN (
+        SELECT player_id, player_status FROM games_rounds
+        WHERE game_id = ${gameId} AND game_round = ${round}
+      ) AS gr ON users.id = gr.player_id
       WHERE game_id = ${gameId}
       ORDER BY position_number;
     `;

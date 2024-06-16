@@ -2,10 +2,12 @@ import { DBGameType } from '@/app/@types/db-types';
 import { SitEditor } from '@/app/events/[id]/game-board/ui/SitEditor';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import {
+  checkIfAllPlayersWithRoleMadeAction,
   checkIfPositionIsActive,
   gameBoardValidator,
 } from '@/app/lib/game-board/validators';
 import { useGameStore } from '@/app/store';
+import { CheckIcon } from '@heroicons/react/24/outline';
 import { Suspense } from 'react';
 import { GAME_ROLES_DATA } from '../constans';
 
@@ -22,6 +24,9 @@ export const Board: React.FC<{
       (player) => Number(player.position_number) === place,
     );
   };
+
+  const playersThatMadeAction =
+    checkIfAllPlayersWithRoleMadeAction(gamePlayers);
 
   return (
     <div className="relative h-[150px] w-[300px] rounded-[60px] border-[20px] border-white-400 sm:h-[250px] sm:w-[500px] md:h-[370px] md:w-[640px] lg:h-[450px] lg:w-[900px]">
@@ -53,6 +58,10 @@ export const Board: React.FC<{
                 gameBoardValidation.passedConditions,
                 player,
               )}
+              isPlayerMadeAction={
+                player &&
+                playersThatMadeAction.actionsArray.includes(player.game_role)
+              }
             />
           );
         })}
@@ -71,6 +80,10 @@ export const Board: React.FC<{
                 gameBoardValidation.passedConditions,
                 player,
               )}
+              isPlayerMadeAction={
+                player &&
+                playersThatMadeAction.actionsArray.includes(player.game_role)
+              }
             />
           );
         })}
@@ -89,6 +102,10 @@ export const Board: React.FC<{
                 gameBoardValidation.passedConditions,
                 player,
               )}
+              isPlayerMadeAction={
+                player &&
+                playersThatMadeAction.actionsArray.includes(player.game_role)
+              }
             />
           );
         })}
@@ -107,6 +124,10 @@ export const Board: React.FC<{
                 gameBoardValidation.passedConditions,
                 player,
               )}
+              isPlayerMadeAction={
+                player &&
+                playersThatMadeAction.actionsArray.includes(player.game_role)
+              }
             />
           );
         })}
@@ -156,34 +177,26 @@ const PlayerDotWrapper = ({
   player,
   labelPosition = 'bottom',
   isActivePosition = true,
+  isPlayerMadeAction = false,
 }: {
   index: number;
   player?: FetchGamePlayerType;
   labelPosition?: 'bottom' | 'left' | 'right';
   isActivePosition?: boolean;
+  isPlayerMadeAction?: boolean;
 }) => {
   const selectedSit = useGameStore((state) => state.selectedSit);
   const setSelectedSit = useGameStore((state) => state.setSelectedSit);
 
-  // const day = useGameStore((state) => state.day);
-  // const { playersStore } = useGetCurrentDayOrNightStore();
-  // const gamePlayers = playersStore[day] || {};
-  // const { player } = findGamePlayerBySitPlace(index, gamePlayers);
-
   return (
     <PlayerDot
       index={index}
-      // bgColor={player?.role ? GAME_ROLES[player.role].color : 'bg-white-400'}
-      // opacity={
-      //   player?.status
-      //     ? GAME_PLAYER_STATUS[player.status].opacity
-      //     : 'opacity-100'
-      // }
       onClick={() => setSelectedSit(index)}
       selected={selectedSit === index}
       player={player}
       labelPosition={labelPosition}
       isActivePosition={isActivePosition}
+      isPlayerMadeAction={isPlayerMadeAction}
     />
   );
 };
@@ -195,6 +208,7 @@ const PlayerDot = ({
   player,
   labelPosition = 'bottom',
   isActivePosition = true,
+  isPlayerMadeAction = false,
 }: {
   index: number;
   onClick: () => void;
@@ -202,11 +216,17 @@ const PlayerDot = ({
   player?: FetchGamePlayerType;
   labelPosition?: 'bottom' | 'left' | 'right';
   isActivePosition?: boolean;
+  isPlayerMadeAction?: boolean;
 }) => {
   const labelPositionClass = {
-    bottom: 'bottom-0 translate-y-[100%]',
-    left: 'left-0 top-1/2 translate-x-[-100%] translate-y-[-50%]',
-    right: 'right-0 top-1/2 translate-x-[100%] translate-y-[-50%]',
+    bottom: '-bottom-1 translate-y-[100%]',
+    left: '-left-1 top-1/2 translate-x-[-100%] translate-y-[-50%]',
+    right: '-right-1 top-1/2 translate-x-[100%] translate-y-[-50%]',
+  }[labelPosition || 'bottom'];
+  const actionsStateClass = {
+    bottom: '-top-1 -translate-y-full',
+    left: '-right-1 top-1/2 translate-x-full -translate-y-1/2 flex-col',
+    right: '-left-1 top-1/2 -translate-x-full -translate-y-1/2 flex-col',
   }[labelPosition || 'bottom'];
 
   const opacityClass = isActivePosition ? 'opacity-100' : 'opacity-50';
@@ -216,7 +236,7 @@ const PlayerDot = ({
     : null;
 
   const RoleIcon = playerRoleData?.icon;
-  const roleColor = playerRoleData?.color;
+  const roleClasses = playerRoleData?.classes || 'bg-[#68709B]';
   const roleIconClasses = playerRoleData?.iconClasses;
 
   return (
@@ -224,8 +244,8 @@ const PlayerDot = ({
       onClick={onClick}
       className={`relative flex h-[50px]  w-[50px] items-center justify-center
         text-center sm:h-[60px] sm:w-[60px] md:h-[70px] md:w-[70px] lg:h-[80px] lg:w-[80px] 
-        ${roleColor ? `bg-[${roleColor}]` : 'bg-[#68709B]'}
-        ${opacityClass} 
+        ${roleClasses}
+        ${opacityClass}
         rounded-full text-xs hover:bg-white-500 sm:text-sm ${
           selected ? 'border-[2px] border-blue-400' : ''
         }`}
@@ -236,6 +256,13 @@ const PlayerDot = ({
       >
         {index}. {player ? player.nickname : '-'}
       </span>
+      {isPlayerMadeAction && (
+        <span
+          className={`absolute flex items-center justify-center text-base font-semibold text-[#CFD3EC] ${actionsStateClass}`}
+        >
+          <CheckIcon className="h-5 w-5" />
+        </span>
+      )}
     </button>
   );
 };

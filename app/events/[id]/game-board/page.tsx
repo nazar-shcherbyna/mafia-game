@@ -30,7 +30,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     return <div>Game not found.</div>;
   }
 
-  const gamePlayers = await fetchGamePlayers(activeGame.id);
+  const gamePlayers = await fetchGamePlayers(
+    activeGame.id,
+    Number(activeGame.round),
+  );
 
   return (
     <div>
