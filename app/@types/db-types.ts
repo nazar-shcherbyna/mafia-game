@@ -50,6 +50,7 @@ export interface DBGamePlayerType {
   player_name: string;
   game_role: DBGamePlayerRoleEnum;
   position_number: string;
+  is_alive: boolean;
 }
 
 export interface DBGameRoundType {

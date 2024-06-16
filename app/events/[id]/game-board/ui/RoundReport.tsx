@@ -1,26 +1,49 @@
-import { useGameStore } from "@/app/store"
-import { UiButton } from "@/app/ui/atoms/button"
+'use client';
 
-export const RoundReport = () => {
-  const [isNight] = useGameStore((state) => [state.isNight])
-  const [roundReport, setRoundReport] = useGameStore((state) => [state.roundReport, state.setRoundReport])
+import {
+  DBGameRoundPlayerStatusEnum,
+  DBGameTurnEnum,
+} from '@/app/@types/db-enums';
+import { DBGameType } from '@/app/@types/db-types';
+import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
+import { useGameStore } from '@/app/store';
+import { UiButton } from '@/app/ui/atoms/button';
 
-  const valueString = (value: any) => {
-    if (Array.isArray(value)) return value.join(', ');
-    return value;
-  }
+export const RoundReport: React.FC<{
+  game: DBGameType;
+  gamePlayers: FetchGamePlayerType[];
+}> = ({ game, gamePlayers }) => {
+  const setIsOpenRoundReport = useGameStore(
+    (state) => state.setIsOpenRoundReport,
+  );
 
   return (
     <div>
-      <div>Report after the last {isNight ? 'Day': 'Night'}:</div>
-
       <div>
-        {roundReport.map((report, index) => <div className="mt-3" key={index}>
-          {Object.entries(report).map((([key, value], index) => <div key={index}>{key}: {valueString(value)}</div>))}
-        </div>)}
+        Report after the last{' '}
+        {game.turn === DBGameTurnEnum.day
+          ? DBGameTurnEnum.night
+          : DBGameTurnEnum.day}
+        :
       </div>
 
-      <UiButton className="mt-3" onClick={() => setRoundReport([])}>Close Report</UiButton>
+      <div>
+        {gamePlayers
+          .filter(
+            (player) =>
+              player.player_status !== DBGameRoundPlayerStatusEnum.alive,
+          )
+          .map((player, index) => (
+            <div className="mt-3" key={index}>
+              {player.position_number}. {player.nickname} -{' '}
+              {player.player_status}
+            </div>
+          ))}
+      </div>
+
+      <UiButton className="mt-3" onClick={() => setIsOpenRoundReport(false)}>
+        Close Report
+      </UiButton>
     </div>
-  )
-}
+  );
+};

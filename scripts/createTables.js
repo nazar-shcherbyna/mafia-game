@@ -102,6 +102,7 @@ async function createGamesPlayersTable(client) {
         player_id UUID NOT NULL,
         game_role game_player_role_enum,
         position_number INT,
+        is_alive BOOLEAN NOT NULL DEFAULT TRUE,
         FOREIGN KEY (game_id) REFERENCES games(id),
         FOREIGN KEY (player_id) REFERENCES users(id)
       );

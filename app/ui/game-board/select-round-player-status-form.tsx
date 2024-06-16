@@ -22,7 +22,7 @@ export interface SelectRoundPlayerStatusFormStateType {
 export const SelectRoundPlayerStatusForm: React.FC<{
   player: FetchGamePlayerType;
   game: DBGameType;
-  playerRoundStatus: DBGameRoundPlayerStatusEnum;
+  playerRoundStatus: DBGameRoundPlayerStatusEnum | null;
 }> = async ({ player, game, playerRoundStatus }) => {
   const [optionsStatus, setOptionsStatus] = React.useState<
     DBGameRoundPlayerStatusEnum | undefined
