@@ -1,13 +1,19 @@
 import { DBGameType } from '@/app/@types/db-types';
 import { SitEditor } from '@/app/events/[id]/game-board/ui/SitEditor';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
+import {
+  checkIfPositionIsActive,
+  gameBoardValidator,
+} from '@/app/lib/game-board/validators';
 import { useGameStore } from '@/app/store';
 import { Suspense } from 'react';
+import { GAME_ROLES_DATA } from '../constans';
 
 export const Board: React.FC<{
   game: DBGameType;
   gamePlayers: FetchGamePlayerType[];
-}> = ({ gamePlayers, game }) => {
+  gameBoardValidation: ReturnType<typeof gameBoardValidator>;
+}> = ({ gamePlayers, game, gameBoardValidation }) => {
   const selectedSit = useGameStore((state) => state.selectedSit);
   // const roundReport = useGameStore((state) => state.roundReport);
 
@@ -26,6 +32,7 @@ export const Board: React.FC<{
               position={selectedSit}
               gamePlayers={gamePlayers}
               game={game}
+              gameBoardValidation={gameBoardValidation}
             />
           </Suspense>
         )}
@@ -33,47 +40,76 @@ export const Board: React.FC<{
       </div>
 
       <PlayersRow>
-        {Array.from({ length: 5 }, (_, index) => (
-          <PlayerDotWrapper
-            key={index}
-            index={1 + index}
-            player={getPlayerBySitPlace(1 + index)}
-            labelPosition="bottom"
-          />
-        ))}
+        {Array.from({ length: 5 }, (_, index) => {
+          const player = getPlayerBySitPlace(1 + index);
+
+          return (
+            <PlayerDotWrapper
+              key={index}
+              index={1 + index}
+              player={player}
+              labelPosition="bottom"
+              isActivePosition={checkIfPositionIsActive(
+                gameBoardValidation.passedConditions,
+                player,
+              )}
+            />
+          );
+        })}
       </PlayersRow>
 
       <PlayersColumn right>
-        {Array.from({ length: 3 }, (_, index) => (
-          <PlayerDotWrapper
-            key={index}
-            index={6 + index}
-            player={getPlayerBySitPlace(6 + index)}
-            labelPosition="right"
-          />
-        ))}
+        {Array.from({ length: 3 }, (_, index) => {
+          const player = getPlayerBySitPlace(6 + index);
+          return (
+            <PlayerDotWrapper
+              key={index}
+              index={6 + index}
+              player={player}
+              labelPosition="right"
+              isActivePosition={checkIfPositionIsActive(
+                gameBoardValidation.passedConditions,
+                player,
+              )}
+            />
+          );
+        })}
       </PlayersColumn>
 
       <PlayersRow bottom>
-        {Array.from({ length: 5 }, (_, index) => (
-          <PlayerDotWrapper
-            key={index}
-            index={9 + index}
-            player={getPlayerBySitPlace(9 + index)}
-            labelPosition="bottom"
-          />
-        ))}
+        {Array.from({ length: 5 }, (_, index) => {
+          const player = getPlayerBySitPlace(9 + index);
+          return (
+            <PlayerDotWrapper
+              key={index}
+              index={9 + index}
+              player={player}
+              labelPosition="bottom"
+              isActivePosition={checkIfPositionIsActive(
+                gameBoardValidation.passedConditions,
+                player,
+              )}
+            />
+          );
+        })}
       </PlayersRow>
 
       <PlayersColumn>
-        {Array.from({ length: 3 }, (_, index) => (
-          <PlayerDotWrapper
-            key={index}
-            index={14 + index}
-            player={getPlayerBySitPlace(14 + index)}
-            labelPosition="left"
-          />
-        ))}
+        {Array.from({ length: 3 }, (_, index) => {
+          const player = getPlayerBySitPlace(14 + index);
+          return (
+            <PlayerDotWrapper
+              key={index}
+              index={14 + index}
+              player={player}
+              labelPosition="left"
+              isActivePosition={checkIfPositionIsActive(
+                gameBoardValidation.passedConditions,
+                player,
+              )}
+            />
+          );
+        })}
       </PlayersColumn>
     </div>
   );
@@ -119,10 +155,12 @@ const PlayerDotWrapper = ({
   index,
   player,
   labelPosition = 'bottom',
+  isActivePosition = true,
 }: {
   index: number;
   player?: FetchGamePlayerType;
   labelPosition?: 'bottom' | 'left' | 'right';
+  isActivePosition?: boolean;
 }) => {
   const selectedSit = useGameStore((state) => state.selectedSit);
   const setSelectedSit = useGameStore((state) => state.setSelectedSit);
@@ -136,17 +174,16 @@ const PlayerDotWrapper = ({
     <PlayerDot
       index={index}
       // bgColor={player?.role ? GAME_ROLES[player.role].color : 'bg-white-400'}
-      bgColor={'bg-white-400'}
       // opacity={
       //   player?.status
       //     ? GAME_PLAYER_STATUS[player.status].opacity
       //     : 'opacity-100'
       // }
-      opacity={'opacity-100'}
       onClick={() => setSelectedSit(index)}
       selected={selectedSit === index}
       player={player}
       labelPosition={labelPosition}
+      isActivePosition={isActivePosition}
     />
   );
 };
@@ -155,18 +192,16 @@ const PlayerDot = ({
   index,
   onClick,
   selected,
-  bgColor,
-  opacity,
   player,
   labelPosition = 'bottom',
+  isActivePosition = true,
 }: {
   index: number;
   onClick: () => void;
   selected: boolean;
-  bgColor: string;
-  opacity: string;
   player?: FetchGamePlayerType;
   labelPosition?: 'bottom' | 'left' | 'right';
+  isActivePosition?: boolean;
 }) => {
   const labelPositionClass = {
     bottom: 'bottom-0 translate-y-[100%]',
@@ -174,18 +209,32 @@ const PlayerDot = ({
     right: 'right-0 top-1/2 translate-x-[100%] translate-y-[-50%]',
   }[labelPosition || 'bottom'];
 
+  const opacityClass = isActivePosition ? 'opacity-100' : 'opacity-50';
+
+  const playerRoleData = player?.game_role
+    ? GAME_ROLES_DATA[player.game_role]
+    : null;
+
+  const RoleIcon = playerRoleData?.icon;
+  const roleColor = playerRoleData?.color;
+  const roleIconClasses = playerRoleData?.iconClasses;
+
   return (
     <button
       onClick={onClick}
-      className={`relative block h-[50px] w-[50px] text-center sm:h-[60px] sm:w-[60px] md:h-[70px] md:w-[70px] lg:h-[80px] lg:w-[80px] ${bgColor} ${opacity} rounded-full text-xs text-blue-400 hover:bg-white-500 sm:text-sm ${
-        selected ? 'border-[2px] border-blue-400' : ''
-      }`}
+      className={`relative flex h-[50px]  w-[50px] items-center justify-center
+        text-center sm:h-[60px] sm:w-[60px] md:h-[70px] md:w-[70px] lg:h-[80px] lg:w-[80px] 
+        ${roleColor ? `bg-[${roleColor}]` : 'bg-[#68709B]'}
+        ${opacityClass} 
+        rounded-full text-xs hover:bg-white-500 sm:text-sm ${
+          selected ? 'border-[2px] border-blue-400' : ''
+        }`}
     >
-      {index}. {player?.role || '---'}
+      {RoleIcon && <RoleIcon className={roleIconClasses} />}
       <span
         className={`absolute block w-full text-base font-semibold text-[#CFD3EC] ${labelPositionClass}`}
       >
-        {player?.nickname}
+        {index}. {player ? player.nickname : '-'}
       </span>
     </button>
   );

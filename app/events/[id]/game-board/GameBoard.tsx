@@ -26,12 +26,12 @@ export const GameBoard = ({
     resetState();
   };
 
-  const nextRoundValidator = gameBoardValidator(game.round, gamePlayers);
+  const gameBoardValidation = gameBoardValidator(game.round, gamePlayers);
 
   return (
-    <div className="relative flex w-full grow-0 flex-col items-center py-20">
-      <h3 className="absolute -top-4">{nextRoundValidator.message}</h3>
-      <div className="absolute top-3 flex w-full items-center justify-between">
+    <div className="relative flex w-full grow-0 flex-col items-center px-24 py-32">
+      <h3 className="absolute -top-2">{gameBoardValidation.message}</h3>
+      <div className="absolute top-6 flex w-full items-center justify-between">
         <UiButton
           // onClick={previousRoundHandler}
           aria-disabled={!round && !isNight}
@@ -43,19 +43,19 @@ export const GameBoard = ({
           {game.turn}: {game.round}
         </div>
         <UiButton
-          disabled={nextRoundValidator.disableNextRound}
-          aria-disabled={nextRoundValidator.disableNextRound}
+          disabled={gameBoardValidation.disableNextRound}
+          aria-disabled={gameBoardValidation.disableNextRound}
           // onClick={nextRoundHandler}
         >
           Next Round
         </UiButton>
       </div>
 
-      <Board game={game} gamePlayers={gamePlayers} />
-
-      <div className="absolute bottom-3 flex w-full items-center justify-between">
-        <UiButton onClick={restartHandler}>Restart</UiButton>
-      </div>
+      <Board
+        game={game}
+        gamePlayers={gamePlayers}
+        gameBoardValidation={gameBoardValidation}
+      />
     </div>
   );
 };

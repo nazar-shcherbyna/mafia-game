@@ -2,21 +2,68 @@ import {
   DBGamePlayerRoleEnum,
   DBGameRoundPlayerStatusEnum,
 } from '@/app/@types/db-enums';
+import {
+  BanknotesIcon,
+  EyeDropperIcon,
+  HeartIcon,
+  HomeIcon,
+  PlusIcon,
+  StarIcon,
+} from '@heroicons/react/24/outline';
 
-export const GAME_ROLES: Record<
+export const GAME_ROLES_DATA: Record<
   DBGamePlayerRoleEnum,
   {
     color: string;
     max: number;
+    icon: React.FC<{
+      className?: string;
+    }>;
+    iconClasses: string;
   }
 > = {
-  [DBGamePlayerRoleEnum.civilian]: { color: 'bg-gray-200', max: Infinity },
-  [DBGamePlayerRoleEnum.detective]: { color: 'bg-gray-400', max: 1 },
-  [DBGamePlayerRoleEnum.doctor]: { color: 'bg-lime-400', max: 1 },
-  [DBGamePlayerRoleEnum.mafia]: { color: 'bg-rose-400', max: Infinity },
-  [DBGamePlayerRoleEnum.don]: { color: 'bg-rose-950', max: 1 },
-  [DBGamePlayerRoleEnum.hooker]: { color: 'bg-purple-400', max: 1 }, //Lola
-  [DBGamePlayerRoleEnum.killer]: { color: 'bg-yellow-500', max: 1 }, //Maniak
+  [DBGamePlayerRoleEnum.civilian]: {
+    color: '#28C76F',
+    max: Infinity,
+    icon: HomeIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  },
+  [DBGamePlayerRoleEnum.detective]: {
+    color: '#047BFB',
+    max: 1,
+    icon: StarIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  },
+  [DBGamePlayerRoleEnum.doctor]: {
+    color: '#F5F5F5',
+    max: 1,
+    icon: PlusIcon,
+    iconClasses: 'h-10 w-10 text-[#EA5455]',
+  },
+  [DBGamePlayerRoleEnum.mafia]: {
+    color: '#43454F',
+    max: Infinity,
+    icon: BanknotesIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  },
+  [DBGamePlayerRoleEnum.don]: {
+    color: '#43454F',
+    max: 1,
+    icon: BanknotesIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  },
+  [DBGamePlayerRoleEnum.hooker]: {
+    color: '#E83E8C',
+    max: 1,
+    icon: HeartIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  }, //Lola
+  [DBGamePlayerRoleEnum.killer]: {
+    color: '#C43234',
+    max: 1,
+    icon: EyeDropperIcon,
+    iconClasses: 'h-10 w-10 text-[#FFFFFF]',
+  }, //Maniak
 } as const;
 
 export const GAME_PLAYER_STATUS: Record<
