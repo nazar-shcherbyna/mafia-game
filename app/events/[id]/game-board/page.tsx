@@ -1,8 +1,8 @@
 import { fetchUser } from '@/app/lib/data';
 import {
   fetchEvent,
+  fetchEventActiveGame,
   fetchEventModerator,
-  fetchEventStartedGames,
 } from '@/app/lib/events/fetch';
 import { fetchGamePlayers } from '@/app/lib/game-board/fetch';
 import { auth } from '@/auth';
@@ -18,26 +18,25 @@ export default async function Page({ params }: { params: { id: string } }) {
   const user = session ? await fetchUser(session.user.id) : null;
   const event = await fetchEvent(params.id);
   const eventModerator = await fetchEventModerator(params.id);
-  const eventActiveGames = await fetchEventStartedGames(params.id);
-  const activeGame = eventActiveGames[0];
+  const eventActiveGame = await fetchEventActiveGame(params.id);
 
   if (
     event === null ||
     user === null ||
     eventModerator === null ||
-    activeGame === undefined
+    eventActiveGame === undefined
   ) {
     return <div>Game not found.</div>;
   }
 
   const gamePlayers = await fetchGamePlayers(
-    activeGame.id,
-    Number(activeGame.round),
+    eventActiveGame.id,
+    Number(eventActiveGame.round),
   );
 
   return (
     <div>
-      <GameBoard game={activeGame} gamePlayers={gamePlayers} />
+      <GameBoard game={eventActiveGame} gamePlayers={gamePlayers} />
     </div>
   );
 }

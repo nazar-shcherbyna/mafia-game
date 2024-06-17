@@ -1,6 +1,10 @@
 'use server';
 
-import { DBGamePlayerRoleEnum } from '@/app/@types/db-enums';
+import {
+  DBGamePlayerRoleEnum,
+  DBGameStatusEnum,
+  DBGameVinnerEnum,
+} from '@/app/@types/db-enums';
 import { SelectRoleFormStateType } from '@/app/ui/game-board/select-role-form';
 import { SelectRoundPlayerStatusFormStateType } from '@/app/ui/game-board/select-round-player-status-form';
 import { sql } from '@vercel/postgres';
@@ -108,6 +112,28 @@ export async function updatePlayerPosition(
 
     return {
       message: 'Failed to update player position.',
+    };
+  }
+}
+
+export async function finishGame({
+  gameId,
+  vinner,
+}: {
+  gameId: string;
+  vinner: DBGameVinnerEnum;
+}): Promise<{ message: string } | undefined> {
+  try {
+    await sql`
+      UPDATE games
+      SET finished_at = CURRENT_TIMESTAMP, status = ${DBGameStatusEnum.finished}, vinner = ${vinner}
+      WHERE id = ${gameId};
+    `;
+  } catch (error) {
+    console.error('Database Error in - finishGame func:', error);
+
+    return {
+      message: 'Failed to finish the game.',
     };
   }
 }

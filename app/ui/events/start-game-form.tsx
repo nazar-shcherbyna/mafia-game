@@ -1,6 +1,8 @@
 'use client';
 
-import { DBEventType, DBUserType } from '@/app/@types/db-types';
+import { DBEventPlayerStatusEnum } from '@/app/@types/db-enums';
+import { DBEventType, DBGameType, DBUserType } from '@/app/@types/db-types';
+import { FetchEventPlayerType } from '@/app/lib/events/fetch';
 
 import { startEvent } from '@/app/lib/events/start';
 import { UiButton } from '@/app/ui/atoms/button';
@@ -12,24 +14,27 @@ export const StartGameForm: React.FC<{
   event: Pick<DBEventType, 'id'>;
   className?: string;
   countOfPlayerIdInEvent: number | null;
-}> = ({ event, user, className, countOfPlayerIdInEvent }) => {
-  const startEventWithAdminIdAndEventId = startEvent.bind(
-    null,
-    user.id,
-    event.id,
-  );
+  eventPlayers: FetchEventPlayerType[];
+  eventGames: DBGameType[];
+}> = ({ event, user, className, countOfPlayerIdInEvent, eventPlayers }) => {
+  const startEventWithAdminIdAndEventId = startEvent.bind(null, {
+    admin_id: user.id,
+    event_id: event.id,
+  });
 
   const [formState, dispatch] = useFormState(
     startEventWithAdminIdAndEventId,
     null,
   );
+
+  const activeEventPlayers = eventPlayers.filter(
+    (player) => player.status === DBEventPlayerStatusEnum.active,
+  );
+
   return (
     <form action={dispatch} className={className}>
       <StartButton
-        disabled={
-          countOfPlayerIdInEvent === 0 ||
-          (countOfPlayerIdInEvent || 0) < settings.eventMinPlayersCount
-        }
+        disabled={activeEventPlayers.length < settings.eventMinPlayersCount}
       />
       {formState?.message && (
         <p className="mt-4 text-red-500">{formState.message}</p>

@@ -35,7 +35,12 @@ function JoinButton() {
   const { pending } = useFormStatus();
 
   return (
-    <UiButton type="submit" className="w-full" aria-disabled={pending}>
+    <UiButton
+      type="submit"
+      className="w-full"
+      disabled={pending}
+      aria-disabled={pending}
+    >
       Join
     </UiButton>
   );

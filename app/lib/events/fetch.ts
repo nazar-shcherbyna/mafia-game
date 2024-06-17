@@ -31,6 +31,10 @@ export async function fetchEvent(id: string) {
   }
 }
 
+export type FetchEventPlayerType = Pick<
+  DBUserType & DBEventPlayerType,
+  'id' | 'nickname' | 'status'
+>;
 export async function fetchEventPlayers(eventId: string) {
   unstable_noStore();
 
@@ -122,7 +126,23 @@ export async function fetchCountOfPlayerIdInEvent(
   }
 }
 
-export const fetchEventStartedGames = async (eventId: string) => {
+export const fetchEventGames = async (eventId: string) => {
+  unstable_noStore();
+
+  try {
+    const games = await sql<DBGameType>`
+      SELECT * FROM games
+      WHERE event_id = ${eventId};
+    `;
+
+    return games.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch event active games.');
+  }
+};
+
+export const fetchEventActiveGame = async (eventId: string) => {
   unstable_noStore();
 
   try {
@@ -132,7 +152,7 @@ export const fetchEventStartedGames = async (eventId: string) => {
       LIMIT 1;
     `;
 
-    return games.rows;
+    return games.rows[0];
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch event active games.');

@@ -30,7 +30,7 @@ export const NextRoundForm: React.FC<{
   return (
     <form action={dispatch}>
       <input type="hidden" name="round" value={2} />
-      <SaveButton disabled={gameBoardValidation.disableNextRound} />
+      <ActionButton disabled={gameBoardValidation.disableNextRound} />
       {formState?.message && (
         <div
           className="flex items-end space-x-1"
@@ -45,8 +45,15 @@ export const NextRoundForm: React.FC<{
   );
 };
 
-function SaveButton({ disabled }: { disabled?: boolean }) {
+function ActionButton({ disabled }: { disabled?: boolean }) {
   const { pending } = useFormStatus();
 
-  return <UiButton aria-disabled={disabled || pending}>Next Round</UiButton>;
+  return (
+    <UiButton
+      disabled={disabled || pending}
+      aria-disabled={disabled || pending}
+    >
+      Next Round
+    </UiButton>
+  );
 }
