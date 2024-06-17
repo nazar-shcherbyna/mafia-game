@@ -4,11 +4,14 @@ import {
   DBGameRoundPlayerStatusEnum,
   DBGameTurnEnum,
 } from '@/app/@types/db-enums';
-import { DBGameType } from '@/app/@types/db-types';
+import { DBGamePlayerType, DBGameType } from '@/app/@types/db-types';
 import { NextRoundFormStateType } from '@/app/ui/game-board/next-round-form';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { FetchGamePlayerType } from './fetch';
+import { finishGame } from './update';
+import { checkIfThereIsVinner } from './validators';
 
 export async function nextGameRound({
   game,
@@ -17,6 +20,8 @@ export async function nextGameRound({
   game: DBGameType;
   gamePlayers: FetchGamePlayerType[];
 }): Promise<NextRoundFormStateType | undefined> {
+  let isGameFinished = false;
+
   try {
     const alivePlayersWithoutStatus = gamePlayers.filter(
       (player) => player.player_status === null && player.is_alive === true,
@@ -49,11 +54,26 @@ export async function nextGameRound({
         `;
       }
 
-      await sql`
-        UPDATE games
-        SET turn = ${DBGameTurnEnum.night}, round = ${game.round + 1}
-        WHERE id = ${game.id};
+      const updatedAliveGamePlayers = await sql<DBGamePlayerType>`
+        SELECT * FROM games_players
+        WHERE game_id = ${game.id} AND is_alive = true;
       `;
+
+      const gameVinner = checkIfThereIsVinner(updatedAliveGamePlayers.rows);
+
+      if (gameVinner !== null) {
+        await finishGame({
+          gameId: game.id,
+          vinner: gameVinner,
+        });
+        isGameFinished = true;
+      } else {
+        await sql`
+          UPDATE games
+          SET turn = ${DBGameTurnEnum.night}, round = ${game.round + 1}
+          WHERE id = ${game.id};
+        `;
+      }
     }
 
     if (game.turn === DBGameTurnEnum.night) {
@@ -97,19 +117,38 @@ export async function nextGameRound({
       `;
       }
 
-      await sql`
-        UPDATE games
-        SET turn = ${DBGameTurnEnum.day}
-        WHERE id = ${game.id};
+      const updatedAliveGamePlayers = await sql<DBGamePlayerType>`
+        SELECT * FROM games_players
+        WHERE game_id = ${game.id} AND is_alive = true;
       `;
+
+      const gameVinner = checkIfThereIsVinner(updatedAliveGamePlayers.rows);
+
+      if (gameVinner !== null) {
+        await finishGame({
+          gameId: game.id,
+          vinner: gameVinner,
+        });
+        isGameFinished = true;
+      } else {
+        await sql`
+          UPDATE games
+          SET turn = ${DBGameTurnEnum.day}
+          WHERE id = ${game.id};
+        `;
+      }
     }
   } catch (error) {
-    console.error('Database Error:', error);
+    console.error('Database Error in nextGameRound:', error);
 
     return {
       message: 'Failed to advance to the next round.',
     };
   }
 
-  revalidatePath(`/events/${game.id}/game-board`);
+  if (isGameFinished) {
+    redirect(`/events/${game.event_id}`);
+  } else {
+    revalidatePath(`/events/${game.id}/game-board`);
+  }
 }

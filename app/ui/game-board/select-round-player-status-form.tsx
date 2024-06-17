@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  DBGamePlayerRoleEnum,
   DBGameRoundPlayerStatusEnum,
   DBGameTurnEnum,
 } from '@/app/@types/db-enums';
@@ -23,7 +24,8 @@ export const SelectRoundPlayerStatusForm: React.FC<{
   player: FetchGamePlayerType;
   game: DBGameType;
   playerRoundStatus: DBGameRoundPlayerStatusEnum | null;
-}> = async ({ player, game, playerRoundStatus }) => {
+  gamePlayers: FetchGamePlayerType[];
+}> = async ({ player, game, playerRoundStatus, gamePlayers }) => {
   const [optionsStatus, setOptionsStatus] = React.useState<
     DBGameRoundPlayerStatusEnum | undefined
   >(undefined);
@@ -37,6 +39,83 @@ export const SelectRoundPlayerStatusForm: React.FC<{
     SelectRoundPlayerStatusFormStateType | undefined
     // @ts-ignore
   >(updateRoundPlayerStatusWithParams, undefined);
+
+  const needTodisableStatus = (status: DBGameRoundPlayerStatusEnum) => {
+    switch (status) {
+      case DBGameRoundPlayerStatusEnum.killed_by_day_vote:
+        return game.turn === DBGameTurnEnum.night;
+      case DBGameRoundPlayerStatusEnum.killed_by_killer:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const killer = gamePlayers.find(
+          (player) => player.game_role === DBGamePlayerRoleEnum.killer,
+        );
+        if (!killer || killer.is_alive === false) {
+          return true;
+        }
+        return false;
+      case DBGameRoundPlayerStatusEnum.hilled_by_doctor:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const doctor = gamePlayers.find(
+          (player) => player.game_role === DBGamePlayerRoleEnum.doctor,
+        );
+        if (!doctor || doctor.is_alive === false) {
+          return true;
+        }
+        return false;
+      case DBGameRoundPlayerStatusEnum.checked_by_detective:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const detective = gamePlayers.find(
+          (player) => player.game_role === DBGamePlayerRoleEnum.detective,
+        );
+        if (!detective || detective.is_alive === false) {
+          return true;
+        }
+        return false;
+      case DBGameRoundPlayerStatusEnum.hooked:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const hooker = gamePlayers.find(
+          (player) => player.game_role === DBGamePlayerRoleEnum.hooker,
+        );
+        if (!hooker || hooker.is_alive === false) {
+          return true;
+        }
+        return false;
+      case DBGameRoundPlayerStatusEnum.killed_by_mafia:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const mafia = gamePlayers.find(
+          (player) =>
+            player.game_role === DBGamePlayerRoleEnum.mafia ||
+            player.game_role === DBGamePlayerRoleEnum.don,
+        );
+        if (!mafia || mafia.is_alive === false) {
+          return true;
+        }
+        return false;
+      case DBGameRoundPlayerStatusEnum.killed_by_detective:
+        if (game.turn === DBGameTurnEnum.day) {
+          return true;
+        }
+        const detectiveRole = gamePlayers.find(
+          (player) => player.game_role === DBGamePlayerRoleEnum.detective,
+        );
+        if (!detectiveRole || detectiveRole.is_alive === false) {
+          return true;
+        }
+        return false;
+      default:
+        return player.player_status === status;
+    }
+  };
 
   return (
     <form action={dispatch}>
@@ -56,12 +135,9 @@ export const SelectRoundPlayerStatusForm: React.FC<{
               <option
                 key={status}
                 value={status}
-                disabled={
-                  (game.turn === DBGameTurnEnum.night &&
-                    status ===
-                      DBGameRoundPlayerStatusEnum.killed_by_day_vote) ||
-                  player.player_status === status
-                }
+                disabled={needTodisableStatus(
+                  status as DBGameRoundPlayerStatusEnum,
+                )}
               >
                 {status}
               </option>

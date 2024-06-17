@@ -2,8 +2,9 @@ import {
   DBGamePlayerRoleEnum,
   DBGameRoundPlayerStatusEnum,
   DBGameTurnEnum,
+  DBGameVinnerEnum,
 } from '@/app/@types/db-enums';
-import { DBGameType } from '@/app/@types/db-types';
+import { DBGamePlayerType, DBGameType } from '@/app/@types/db-types';
 import { FetchGamePlayerType } from './fetch';
 
 export function checkIfPositionIsActive(
@@ -36,64 +37,74 @@ export function checkIfAllPlayersHaveRole(
 }
 
 export function checkIfAllPlayersWithRoleMadeAction(
-  gamePlayers: FetchGamePlayerType[],
+  aliveGamePlayers: FetchGamePlayerType[],
 ): {
   isAllPlayersWithRoleMadeAction: boolean;
   actionsArray: DBGamePlayerRoleEnum[];
   isCityVoted: boolean;
 } {
-  const actionsArray = [];
-  const isMafiaMadeAction = gamePlayers.some(
+  const actionsArray: DBGamePlayerRoleEnum[] = [];
+  const aliveRolesWithActionArray = aliveGamePlayers
+    .filter((player) => player.game_role !== DBGamePlayerRoleEnum.civilian)
+    .map((player) => player.game_role);
+
+  const isRoleAlive = (gameRole: DBGamePlayerRoleEnum) => {
+    return aliveGamePlayers.some((player) => player.game_role === gameRole);
+  };
+
+  const isMafiaMadeAction = aliveGamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.killed_by_mafia,
   );
   if (isMafiaMadeAction) {
-    actionsArray.push(DBGamePlayerRoleEnum.mafia, DBGamePlayerRoleEnum.don);
+    if (isRoleAlive(DBGamePlayerRoleEnum.mafia)) {
+      actionsArray.push(DBGamePlayerRoleEnum.mafia);
+    }
+    if (isRoleAlive(DBGamePlayerRoleEnum.don)) {
+      actionsArray.push(DBGamePlayerRoleEnum.don);
+    }
   }
 
-  const isDetectiveMadeAction = gamePlayers.some(
+  const isDetectiveMadeAction = aliveGamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.checked_by_detective,
   );
-  if (isDetectiveMadeAction) {
+  if (isDetectiveMadeAction && isRoleAlive(DBGamePlayerRoleEnum.detective)) {
     actionsArray.push(DBGamePlayerRoleEnum.detective);
   }
 
-  const isDoctorMadeAction = gamePlayers.some(
+  const isDoctorMadeAction = aliveGamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.hilled_by_doctor,
   );
-  if (isDoctorMadeAction) {
+  if (isDoctorMadeAction && isRoleAlive(DBGamePlayerRoleEnum.doctor)) {
     actionsArray.push(DBGamePlayerRoleEnum.doctor);
   }
 
-  const isKillerMadeAction = gamePlayers.some(
+  const isKillerMadeAction = aliveGamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.killed_by_killer,
   );
-  if (isKillerMadeAction) {
+  if (isKillerMadeAction && isRoleAlive(DBGamePlayerRoleEnum.killer)) {
     actionsArray.push(DBGamePlayerRoleEnum.killer);
   }
 
-  const isHookerMadeAction = gamePlayers.some(
+  const isHookerMadeAction = aliveGamePlayers.some(
     (player) => player.player_status === DBGameRoundPlayerStatusEnum.hooked,
   );
-  if (isHookerMadeAction) {
+  if (isHookerMadeAction && isRoleAlive(DBGamePlayerRoleEnum.hooker)) {
     actionsArray.push(DBGamePlayerRoleEnum.hooker);
   }
 
-  const isCityVoted = gamePlayers.some(
+  const isCityVoted = aliveGamePlayers.some(
     (player) =>
       player.player_status === DBGameRoundPlayerStatusEnum.killed_by_day_vote,
   );
 
   return {
-    isAllPlayersWithRoleMadeAction:
-      isMafiaMadeAction &&
-      isDetectiveMadeAction &&
-      isDoctorMadeAction &&
-      isKillerMadeAction &&
-      isHookerMadeAction,
+    isAllPlayersWithRoleMadeAction: actionsArray.every((role) =>
+      aliveRolesWithActionArray.includes(role),
+    ),
     actionsArray,
     isCityVoted,
   };
@@ -107,9 +118,22 @@ export const gameBoardValidator = (
   disableNextRound: boolean;
   passedConditions: ('positions' | 'roles' | 'actions')[];
 } => {
+  if (game.vinner !== null) {
+    return {
+      message: `The game is finished at ${game.finished_at}. The vinner is ${game.vinner}`,
+      disableNextRound: true,
+      passedConditions: [],
+    };
+  }
+
   const roundNumber = Number(game.round);
+  const aliveGamePlayers = gamePlayers.filter(
+    (player) => player.is_alive === true,
+  );
+
   if (roundNumber === 1) {
-    const isAllPlayersHavePosition = checkIfAllPlayersHavePosition(gamePlayers);
+    const isAllPlayersHavePosition =
+      checkIfAllPlayersHavePosition(aliveGamePlayers);
 
     if (!isAllPlayersHavePosition) {
       return {
@@ -119,7 +143,7 @@ export const gameBoardValidator = (
       };
     }
 
-    const isAllPlayersHaveRole = checkIfAllPlayersHaveRole(gamePlayers);
+    const isAllPlayersHaveRole = checkIfAllPlayersHaveRole(aliveGamePlayers);
 
     if (!isAllPlayersHaveRole) {
       return {
@@ -130,7 +154,7 @@ export const gameBoardValidator = (
     }
 
     const isAllPlayersWithRoleMadeAction =
-      checkIfAllPlayersWithRoleMadeAction(gamePlayers);
+      checkIfAllPlayersWithRoleMadeAction(aliveGamePlayers);
 
     if (!isAllPlayersWithRoleMadeAction) {
       return {
@@ -140,19 +164,70 @@ export const gameBoardValidator = (
       };
     }
 
-    const successMessage =
-      game.turn === DBGameTurnEnum.night
-        ? 'You can start Day 1.'
-        : 'You can start Night 2.';
+    if (game.turn === DBGameTurnEnum.day) {
+      const isCityVoted = isAllPlayersWithRoleMadeAction.isCityVoted;
+
+      if (!isCityVoted) {
+        return {
+          message:
+            'Please, vote for the player who you want to kill in the day.',
+          disableNextRound: true,
+          passedConditions: ['positions', 'roles', 'actions'],
+        };
+      }
+
+      return {
+        message: 'You can start Night 2.',
+        disableNextRound: false,
+        passedConditions: ['positions', 'roles', 'actions'],
+      };
+    }
 
     return {
-      message: successMessage,
+      message: 'You can start Day 1.',
       disableNextRound: false,
       passedConditions: ['positions', 'roles', 'actions'],
     };
   } else if (roundNumber > 1) {
+    const isAllPlayersWithRoleMadeAction =
+      checkIfAllPlayersWithRoleMadeAction(aliveGamePlayers);
+
+    console.log('game', game);
+
+    console.log(
+      'isAllPlayersWithRoleMadeAction',
+      isAllPlayersWithRoleMadeAction,
+    );
+
+    if (!isAllPlayersWithRoleMadeAction.isAllPlayersWithRoleMadeAction) {
+      return {
+        message: 'Please, assign all players to their actions.',
+        disableNextRound: true,
+        passedConditions: ['positions', 'roles'],
+      };
+    }
+
+    if (game.turn === DBGameTurnEnum.day) {
+      const isCityVoted = isAllPlayersWithRoleMadeAction.isCityVoted;
+
+      if (!isCityVoted) {
+        return {
+          message:
+            'Please, vote for the player who you want to kill in the day.',
+          disableNextRound: true,
+          passedConditions: ['positions', 'roles', 'actions'],
+        };
+      }
+
+      return {
+        message: `You can start Night ${roundNumber + 1}.`,
+        disableNextRound: false,
+        passedConditions: ['positions', 'roles', 'actions'],
+      };
+    }
+
     return {
-      message: 'You can start the next round.',
+      message: `You can start Day ${roundNumber}.`,
       disableNextRound: false,
       passedConditions: ['positions', 'roles'],
     };
@@ -164,3 +239,27 @@ export const gameBoardValidator = (
     };
   }
 };
+
+export function checkIfThereIsVinner(
+  updatedAliveGamePlayers: DBGamePlayerType[],
+) {
+  const mafiaPlayers = updatedAliveGamePlayers.filter(
+    (player) =>
+      player.game_role === DBGamePlayerRoleEnum.mafia ||
+      player.game_role === DBGamePlayerRoleEnum.don,
+  );
+
+  const cityPlayers = updatedAliveGamePlayers.filter(
+    (player) =>
+      player.game_role !== DBGamePlayerRoleEnum.mafia &&
+      player.game_role !== DBGamePlayerRoleEnum.don,
+  );
+
+  if (mafiaPlayers.length === 0) {
+    return DBGameVinnerEnum.civilians;
+  } else if (mafiaPlayers.length >= cityPlayers.length) {
+    return DBGameVinnerEnum.mafia;
+  }
+
+  return null;
+}

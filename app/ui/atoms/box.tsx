@@ -4,7 +4,7 @@ export const UiBox: React.FC<{
 }> = ({ children, className }) => {
   return (
     <div
-      className={`${className}
+      className={`${className ? className : ''}
         rounded-xl
         border-[1px] border-[#68709B] 
         bg-[#393C51]

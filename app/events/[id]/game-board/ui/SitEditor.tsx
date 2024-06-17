@@ -1,7 +1,11 @@
+'use client';
+
 import { DBGameType } from '@/app/@types/db-types';
 import { findGamePlayerBySitPlace } from '@/app/dashboard/game/utils';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { gameBoardValidator } from '@/app/lib/game-board/validators';
+import { useGameStore } from '@/app/store';
+import { UiButton } from '@/app/ui/atoms/button';
 import { SelectPlayerPositionForm } from '@/app/ui/game-board/select-player-position-form';
 import { SelectRoleForm } from '@/app/ui/game-board/select-role-form';
 import { SelectRoundPlayerStatusForm } from '@/app/ui/game-board/select-round-player-status-form';
@@ -18,6 +22,12 @@ export async function SitEditor({
   gameBoardValidation: ReturnType<typeof gameBoardValidator>;
 }) {
   const playerInPlace = findGamePlayerBySitPlace(position, gamePlayers);
+
+  const setSelectedSit = useGameStore((state) => state.setSelectedSit);
+
+  const closeSitEditor = () => {
+    setSelectedSit(null);
+  };
 
   return (
     <>
@@ -44,8 +54,12 @@ export async function SitEditor({
                 playerRoundStatus={playerInPlace.player_status}
                 game={game}
                 player={playerInPlace}
+                gamePlayers={gamePlayers}
               />
             )}
+          <UiButton className="ml-auto mt-4 w-fit" onClick={closeSitEditor}>
+            Close sit editor
+          </UiButton>
         </div>
       </div>
     </>

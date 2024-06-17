@@ -12,16 +12,26 @@ import { settings } from '@/settings';
 import { sql } from '@vercel/postgres';
 import { unstable_noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { fetchEvent, fetchEventModerator, fetchEventPlayers } from './fetch';
+import {
+  fetchEvent,
+  fetchEventGames,
+  fetchEventModerator,
+  fetchEventPlayers,
+} from './fetch';
 
-export async function startEvent(
-  admin_id: string,
-  event_id: string,
-): Promise<JoinEventFormStateType | null> {
+export async function startEvent({
+  admin_id,
+  event_id,
+}: {
+  admin_id: string;
+  event_id: string;
+}): Promise<JoinEventFormStateType | null> {
   unstable_noStore();
 
   try {
     const event = await fetchEvent(event_id);
+    const eventGames = await fetchEventGames(event_id);
+
     if (event === null) {
       return {
         message: 'Could not find event.',
@@ -33,9 +43,14 @@ export async function startEvent(
         message: 'You are not the event moderator.',
       };
     }
-    if (event.status === DBEventStatusEnum.inProgress) {
+
+    const activeGame = eventGames.find(
+      (game) => game.status === DBGameStatusEnum.started,
+    );
+
+    if (activeGame) {
       return {
-        message: 'Event is already has started.',
+        message: 'Event has active game.',
       };
     }
     if (event.status === DBEventStatusEnum.completed) {
@@ -49,15 +64,15 @@ export async function startEvent(
         message: 'Event has not enough players.',
       };
     }
-    // on this step I need to:
-    // 1. Update the event status to 'in-process'
-    // 2. Create a first game for the event
-    // 3. Add all players to the game
-    await sql`
-        UPDATE events
-        SET status = ${DBEventStatusEnum.inProgress}
-        WHERE id = ${event_id};
-    `;
+
+    if (event.status === DBEventStatusEnum.created) {
+      await sql`
+          UPDATE events
+          SET status = ${DBEventStatusEnum.inProgress}
+          WHERE id = ${event_id};
+      `;
+    }
+
     const game = await sql<DBGameType>`
       INSERT INTO games (event_id, status, round, turn)
       VALUES (${event_id}, ${DBGameStatusEnum.started}, 1, ${DBGameTurnEnum.night})
