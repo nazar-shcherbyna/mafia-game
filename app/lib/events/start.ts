@@ -49,10 +49,7 @@ export async function startEvent(
         message: 'Event has not enough players.',
       };
     }
-    // on this step I need to:
-    // 1. Update the event status to 'in-process'
-    // 2. Create a first game for the event
-    // 3. Add all players to the game
+
     await sql`
         UPDATE events
         SET status = ${DBEventStatusEnum.inProgress}
