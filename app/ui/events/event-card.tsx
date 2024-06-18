@@ -1,6 +1,10 @@
 'use client';
 
-import { DBGameStatusEnum, DBUserRolesEnum } from '@/app/@types/db-enums';
+import {
+  DBEventStatusEnum,
+  DBGameStatusEnum,
+  DBUserRolesEnum,
+} from '@/app/@types/db-enums';
 import { DBEventType, DBGameType, DBUserType } from '@/app/@types/db-types';
 import { FetchEventPlayerType } from '@/app/lib/events/fetch';
 import { canPlayerJoinEvent } from '@/app/lib/utils';
@@ -39,8 +43,6 @@ export function EventCard({
     (game) => game.status === DBGameStatusEnum.started,
   );
 
-  console.log('eventGames', eventGames);
-
   return (
     <NoSSR>
       <UiBox className="w-[300px] p-10 sm:w-[440px] md:w-[610px]">
@@ -48,27 +50,32 @@ export function EventCard({
           user={user}
           event={event}
           eventModerator={eventModerator}
+          eventGames={eventGames}
         />
         <EventCardPlayers eventUsers={eventPlayers} />
         <EventCardGames eventGames={eventGames} />
-        {user.role === DBUserRolesEnum.admin &&
-          (!activeEventGames ? (
-            <StartGameForm
-              event={event}
-              user={user}
-              countOfPlayerIdInEvent={countOfPlayerIdInEvent}
-              className="mt-6"
-              eventPlayers={eventPlayers}
-              eventGames={eventGames}
-            />
-          ) : (
-            <BtnToGameBoard
-              eventId={event.id}
-              className="mt-6 block w-full text-center"
-            />
-          ))}
-        {user.role === DBUserRolesEnum.player && canJoinToEvent && (
-          <JoinEventForm className="mt-6" event={event} user={user} />
+        {event.status !== DBEventStatusEnum.completed && (
+          <>
+            {user.role === DBUserRolesEnum.admin &&
+              (!activeEventGames ? (
+                <StartGameForm
+                  event={event}
+                  user={user}
+                  countOfPlayerIdInEvent={countOfPlayerIdInEvent}
+                  className="mt-6"
+                  eventPlayers={eventPlayers}
+                  eventGames={eventGames}
+                />
+              ) : (
+                <BtnToGameBoard
+                  eventId={event.id}
+                  className="mt-6 block w-full text-center"
+                />
+              ))}
+            {user.role === DBUserRolesEnum.player && canJoinToEvent && (
+              <JoinEventForm className="mt-6" event={event} user={user} />
+            )}
+          </>
         )}
       </UiBox>
     </NoSSR>
