@@ -9,6 +9,10 @@ export const EventCardDescription: React.FC<{
   eventModerator: Pick<DBUserType, 'id' | 'nickname'>;
   eventGames: DBGameType[];
 }> = ({ user, event, eventModerator, eventGames }) => {
+  const canRenderFinishButton =
+    user.id === eventModerator.id &&
+    event.status !== DBEventStatusEnum.completed;
+
   return (
     <div className="mb-6 flex items-start gap-6">
       <Image
@@ -31,7 +35,7 @@ export const EventCardDescription: React.FC<{
             eventModerator.id === user.id ? ' (You)' : ''
           }`}
         />
-        {event.status !== DBEventStatusEnum.completed && (
+        {canRenderFinishButton && (
           <FinishEventForm event={event} eventGames={eventGames} />
         )}
       </div>
