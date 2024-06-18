@@ -1,11 +1,14 @@
-import { DBEventType, DBUserType } from '@/app/@types/db-types';
+import { DBEventStatusEnum } from '@/app/@types/db-enums';
+import { DBEventType, DBGameType, DBUserType } from '@/app/@types/db-types';
 import Image from 'next/image';
+import { FinishEventForm } from './finish-event-form';
 
 export const EventCardDescription: React.FC<{
   user: DBUserType;
   event: DBEventType;
   eventModerator: Pick<DBUserType, 'id' | 'nickname'>;
-}> = ({ user, event, eventModerator }) => {
+  eventGames: DBGameType[];
+}> = ({ user, event, eventModerator, eventGames }) => {
   return (
     <div className="mb-6 flex items-start gap-6">
       <Image
@@ -28,6 +31,9 @@ export const EventCardDescription: React.FC<{
             eventModerator.id === user.id ? ' (You)' : ''
           }`}
         />
+        {event.status !== DBEventStatusEnum.completed && (
+          <FinishEventForm event={event} eventGames={eventGames} />
+        )}
       </div>
     </div>
   );
