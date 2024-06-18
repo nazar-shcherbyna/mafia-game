@@ -92,14 +92,6 @@ export const SelectRoundPlayerStatusForm: React.FC<{
         if (game.turn === DBGameTurnEnum.day) {
           return true;
         }
-        const mafia = gamePlayers.find(
-          (player) =>
-            player.game_role === DBGamePlayerRoleEnum.mafia ||
-            player.game_role === DBGamePlayerRoleEnum.don,
-        );
-        if (!mafia || mafia.is_alive === false) {
-          return true;
-        }
         return false;
       case DBGameRoundPlayerStatusEnum.killed_by_detective:
         if (game.turn === DBGameTurnEnum.day) {
