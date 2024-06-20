@@ -1,9 +1,9 @@
+import { UiBox } from '@/app/ui/atoms/box';
 import {
   ArrowUpCircleIcon,
   DocumentCheckIcon,
   PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
-import { UiBox } from '../../atoms/box';
 
 export const PlayerStatistic: React.FC = () => {
   return (

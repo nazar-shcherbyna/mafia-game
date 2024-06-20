@@ -1,8 +1,8 @@
 'use client';
 
+import { login } from '@/app/lib/auth/login';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { useFormState, useFormStatus } from 'react-dom';
-import { login } from '../lib/auth/login';
 import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';

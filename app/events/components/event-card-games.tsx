@@ -1,5 +1,5 @@
 import { DBGameType } from '@/app/@types/db-types';
-import { UiBox } from '../atoms/box';
+import { UiBox } from '@/app/ui/atoms/box';
 
 export const EventCardGames: React.FC<{
   eventGames: DBGameType[];

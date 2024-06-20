@@ -1,5 +1,5 @@
+import { DBUserType } from '@/app/@types/db-types';
 import { sql } from '@vercel/postgres';
-import { DBUserType } from '../@types/db-types';
 import {
   CustomerField,
   CustomersTable,

@@ -1,7 +1,7 @@
 import { fetchAllEvents } from '@/app/lib/events/fetch';
+import { UiEventStatus } from '@/app/ui/atoms/status';
+import { UiLink } from '@/app/ui/link';
 import { settings } from '@/settings';
-import { UiEventStatus } from '../atoms/status';
-import { UiLink } from '../link';
 
 export default async function EventsTable() {
   const events = await fetchAllEvents();

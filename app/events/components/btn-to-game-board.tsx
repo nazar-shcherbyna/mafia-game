@@ -1,7 +1,7 @@
 'use client';
 
+import { UiLink } from '@/app/ui/link';
 import React from 'react';
-import { UiLink } from '../link';
 
 export const BtnToGameBoard: React.FC<{
   className?: string;

@@ -1,5 +1,5 @@
+import RegistrationForm from '@/app/ui/registration-form';
 import { Metadata } from 'next';
-import RegistrationForm from '../ui/registration-form';
 
 export const metadata: Metadata = {
   title: 'Registration',

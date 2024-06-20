@@ -1,11 +1,11 @@
 import { DBUserType } from '@/app/@types/db-types';
+import { UiBox } from '@/app/ui/atoms/box';
 import {
   CircleStackIcon,
   GiftIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { UiBox } from '../../atoms/box';
 import { SidebarSignOut } from './sign-out';
 
 export const PlayerCard: React.FC<{ user: DBUserType | null }> = ({ user }) => {

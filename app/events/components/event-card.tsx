@@ -8,8 +8,8 @@ import {
 import { DBEventType, DBGameType, DBUserType } from '@/app/@types/db-types';
 import { FetchEventPlayerType } from '@/app/lib/events/fetch';
 import { canPlayerJoinEvent } from '@/app/lib/utils';
+import { UiBox } from '@/app/ui/atoms/box';
 import NoSSR from '@/app/ui/no-ssr';
-import { UiBox } from '../atoms/box';
 import { BtnToGameBoard } from './btn-to-game-board';
 import { EventCardDescription } from './event-card-description';
 import { EventCardGames } from './event-card-games';

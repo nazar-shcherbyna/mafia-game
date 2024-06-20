@@ -4,10 +4,10 @@ import { DBGameType } from '@/app/@types/db-types';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { nextGameRound } from '@/app/lib/game-board/next-round';
 import { gameBoardValidator } from '@/app/lib/game-board/validators';
+import { UiButton } from '@/app/ui/atoms/button';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { UiButton } from '../atoms/button';
 
 export interface NextRoundFormStateType {
   message: string;

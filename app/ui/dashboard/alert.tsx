@@ -1,7 +1,7 @@
 import { DBUserType } from '@/app/@types/db-types';
+import { UiBox } from '@/app/ui/atoms/box';
+import { UiLink } from '@/app/ui/link';
 import { BellAlertIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
-import { UiBox } from '../atoms/box';
-import { UiLink } from '../link';
 
 export const EventsTableAlert: React.FC<{
   user: DBUserType | null;

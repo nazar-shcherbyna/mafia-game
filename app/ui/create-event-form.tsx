@@ -1,9 +1,9 @@
 'use client';
 
+import { createEvent } from '@/app/lib/events/create';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useFormState, useFormStatus } from 'react-dom';
-import { createEvent } from '../lib/events/create';
 import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';

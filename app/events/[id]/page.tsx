@@ -1,14 +1,14 @@
+import { EventCard } from '@/app/events/components/event-card';
 import { fetchUser } from '@/app/lib/data';
-import { auth } from '@/auth';
-import type { Metadata } from 'next';
 import {
   fetchCountOfPlayerIdInEvent,
   fetchEvent,
   fetchEventGames,
   fetchEventModerator,
   fetchEventPlayers,
-} from '../../lib/events/fetch';
-import { EventCard } from '../../ui/events/event-card';
+} from '@/app/lib/events/fetch';
+import { auth } from '@/auth';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Event card',

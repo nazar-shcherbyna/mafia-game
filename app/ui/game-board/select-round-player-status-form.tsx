@@ -7,14 +7,14 @@ import {
 } from '@/app/@types/db-enums';
 import { DBGameType } from '@/app/@types/db-types';
 import { GamePlayerStatusKeysType } from '@/app/dashboard/game/types';
+import { PropertyWrapper } from '@/app/events/[id]/game-board/ui/PropertyWrapper';
 import { FetchGamePlayerType } from '@/app/lib/game-board/fetch';
 import { updateRoundPlayerStatus } from '@/app/lib/game-board/update';
+import { UiButton } from '@/app/ui/atoms/button';
 import { UiSelect } from '@/app/ui/atoms/select';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { PropertyWrapper } from '../../events/[id]/game-board/ui/PropertyWrapper';
-import { UiButton } from '../atoms/button';
 
 export interface SelectRoundPlayerStatusFormStateType {
   message: string;

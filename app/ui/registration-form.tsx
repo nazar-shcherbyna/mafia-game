@@ -1,8 +1,8 @@
 'use client';
 
+import { registrate } from '@/app/lib/auth/registrate';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { useFormState, useFormStatus } from 'react-dom';
-import { registrate } from '../lib/auth/registrate';
 import { UiButton } from './atoms/button';
 import { UiFormCard } from './form/form-card';
 import { UiFormInput } from './form/input';

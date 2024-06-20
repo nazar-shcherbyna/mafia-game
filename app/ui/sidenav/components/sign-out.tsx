@@ -1,6 +1,6 @@
+import { UiButton } from '@/app/ui/atoms/button';
 import { signOut } from '@/auth';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { UiButton } from '../../atoms/button';
 
 export const SidebarSignOut: React.FC = () => {
   return (

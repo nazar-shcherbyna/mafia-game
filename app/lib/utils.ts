@@ -1,6 +1,6 @@
+import { DBEventStatusEnum } from '@/app/@types/db-enums';
+import type { DBEventType, DBUserType } from '@/app/@types/db-types';
 import { settings } from '@/settings';
-import { DBEventStatusEnum } from '../@types/db-enums';
-import type { DBEventType, DBUserType } from '../@types/db-types';
 
 import { Revenue } from './definitions';
 
