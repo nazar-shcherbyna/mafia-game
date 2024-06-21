@@ -57,6 +57,7 @@ export function EventCard({
         {event.status !== DBEventStatusEnum.completed && (
           <>
             {user.role === DBUserRolesEnum.admin &&
+              user.id === event.admin_id &&
               (!activeEventGames ? (
                 <StartGameForm
                   event={event}

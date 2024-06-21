@@ -52,6 +52,7 @@ async function createEventsPlayersTable(client) {
         CREATE TABLE IF NOT EXISTS events_players (
           event_id UUID,
           player_id UUID NOT NULL,
+          position_number INT,
           status event_player_status_enum NOT NULL DEFAULT 'active',
           FOREIGN KEY (event_id) REFERENCES events(id),
           FOREIGN KEY (player_id) REFERENCES users(id)

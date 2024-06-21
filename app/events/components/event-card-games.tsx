@@ -12,8 +12,7 @@ export const EventCardGames: React.FC<{
           <ul>
             {eventGames.map((game, index) => (
               <li className="block w-full text-lg" key={game.id}>
-                {index + 1}.) rounds - {game.round}, status - {game.status},
-                vinner - {game.vinner}
+                {index + 1}.) rounds - {game.round}, vinner - {game.vinner}
               </li>
             ))}
           </ul>

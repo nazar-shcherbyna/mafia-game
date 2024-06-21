@@ -8,7 +8,7 @@ import {
 import Image from 'next/image';
 import { SidebarSignOut } from './sign-out';
 
-export const PlayerCard: React.FC<{ user: DBUserType | null }> = ({ user }) => {
+export const UserCard: React.FC<{ user: DBUserType | null }> = ({ user }) => {
   return (
     <UiBox>
       <div className="mb-[16px] flex gap-5 border-b-[1px] border-[#68709B] pb-[16px]">

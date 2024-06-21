@@ -15,6 +15,10 @@ export default async function Page() {
 
   const user = session ? await fetchUser(session.user.id) : null;
 
+  if (user == null) {
+    return <div>Not found</div>;
+  }
+
   return (
     <>
       <div className="w-full pb-6 lg:w-1/3">

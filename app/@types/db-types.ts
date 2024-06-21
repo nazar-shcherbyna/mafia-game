@@ -31,6 +31,7 @@ export interface DBEventPlayerType {
   player_id: string;
   event_id: string;
   status: DBEventPlayerStatusEnum;
+  position_number: string;
 }
 
 export interface DBGameType {
