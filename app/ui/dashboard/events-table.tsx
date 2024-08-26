@@ -1,9 +1,10 @@
+import { DBUserType } from '@/app/@types/db-types';
 import { fetchAllEvents } from '@/app/lib/events/fetch';
 import { UiEventStatus } from '@/app/ui/atoms/status';
 import { UiLink } from '@/app/ui/link';
 import { settings } from '@/settings';
 
-export default async function EventsTable() {
+export default async function EventsTable({ user }: { user: DBUserType }) {
   const events = await fetchAllEvents();
 
   if (events.length === 0) {
@@ -50,7 +51,9 @@ export default async function EventsTable() {
               className="border-b-[1px] border-[#68709B] last:border-b-0"
               key={event.id}
             >
-              <td className="px-6 py-3.5">{event.title}</td>
+              <td className="px-6 py-3.5">
+                {event.title} {user.id === event.admin_id ? '(Your)' : ''}
+              </td>
               <td className="px-6 py-3.5 capitalize">{event.location}</td>
               <td className="px-6 py-3.5">
                 <UiEventStatus status={event.status} />

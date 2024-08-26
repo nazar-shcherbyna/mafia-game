@@ -28,7 +28,7 @@ export default async function Page() {
         <div className="flex flex-col gap-6">
           <EventsTableAlert user={user} />
           <Suspense fallback={<div>Loading...</div>}>
-            <EventsTable />
+            <EventsTable user={user} />
           </Suspense>
         </div>
       </div>

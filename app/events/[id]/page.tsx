@@ -15,15 +15,19 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const session = await auth();
+  const [session, event, eventModerator, eventGames] = await Promise.all([
+    auth(),
+    fetchEvent(params.id),
+    fetchEventModerator(params.id),
+    fetchEventGames(params.id),
+  ]);
+
   const user = session ? await fetchUser(session.user.id) : null;
-  const event = await fetchEvent(params.id);
-  const eventPlayers = user ? await fetchEventPlayers(params.id) : [];
-  const countOfPlayerIdInEvent = user
-    ? await fetchCountOfPlayerIdInEvent(params.id, user.id)
-    : null;
-  const eventModerator = await fetchEventModerator(params.id);
-  const eventGames = await fetchEventGames(params.id);
+
+  const [eventPlayers, countOfPlayerIdInEvent] = await Promise.all([
+    user ? fetchEventPlayers(params.id) : [],
+    user ? fetchCountOfPlayerIdInEvent(params.id, user.id) : null,
+  ]);
 
   if (event === null || user === null || eventModerator === null) {
     return <div>Event not found.</div>;
